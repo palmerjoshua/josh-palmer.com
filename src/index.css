@@ -6,19 +6,36 @@ body {
     font-family: sans-serif;
 }
 
-.navItem > a {
-    text-decoration: none;
-}
 
-.navItem > a, .navItem > a:visited {
+.navItem > a, .navItem > a:visited, .footerLink, .footerLink:visited {
+    text-decoration: none;
     color: #606060;
 }
 
-.navItem > a:hover {
+.navItem > a:hover, .footerLink:hover {
     text-decoration: underline;
     color: black;
 }
 
 .navItem:not(:last-child) {
     margin-bottom: 5px;
+}
+
+
+.sideBar {
+    padding: 10px;
+    width: 10%;
+    background: #606060;
+    display: table;
+}
+
+.ResumeField {
+    height: 33%;
+    width: 58%;
+    padding: 10px;
+    background: #606060;
+}
+
+.ResumeField:not(:last-child) {
+    margin-bottom: 10px;
 }

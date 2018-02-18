@@ -5,13 +5,13 @@ import {
 } from 'react-router-dom';
 import SideBar from './SideBar';
 import ResumePage from './ResumePage';
-import AboutMe from './AboutMe';
+import Resume from './resume/Resume';
 
 const routes = [
-    {path: '/', navText: 'Home', exact: true, external: false, component: AboutMe},
     {path: '/resume', navText: 'Resume', exact: true, external: false, component: ResumePage},
     {path: 'https://www.linkedin.com/in/joshua-palmer-56a345102/', navText: 'LinkedIn', external: true},
-    {path: 'https://github.com/palmerjoshua', navText: 'GitHub', external: true}
+    {path: 'https://github.com/palmerjoshua', navText: 'GitHub', external: true},
+    {path: '/resume/experimental', navText: 'NewResume', exact: true, external: false, component: Resume}
 ];
 
 class App extends Component {
@@ -21,18 +21,16 @@ class App extends Component {
         });
         return (
             <Router>
-                <div style={{display: 'flex', height: '100%'}}>
+                <div  style={{display: 'flex'}}>
                     <SideBar routes={navRoutes}/>
-                    <div style={{paddingLeft: 10, paddingRight: 10, width: '100%', height: '100%'}}>
-                        {routes.map((route, index) => (
-                            !route.external &&
-                            <Route
-                                key={index}
-                                path={route.path}
-                                exact={route.exact}
-                                component={route.component}/>
-                        ))}
-                    </div>
+                    {routes.map((route, index) => (
+                        !route.external &&
+                        <Route
+                            key={index}
+                            path={route.path}
+                            exact={route.exact}
+                            component={route.component}/>
+                    ))}
                 </div>
             </Router>
         );
