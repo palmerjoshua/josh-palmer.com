@@ -9,9 +9,9 @@ import Resume from './resume/Resume';
 
 const routes = [
     {path: '/resume', navText: 'Resume', exact: true, external: false, component: ResumePage},
+    {path: '/resume/experimental', navText: 'Interactive', exact: true, external: false, component: Resume},
     {path: 'https://www.linkedin.com/in/joshua-palmer-56a345102/', navText: 'LinkedIn', external: true},
-    {path: 'https://github.com/palmerjoshua', navText: 'GitHub', external: true},
-    {path: '/resume/experimental', navText: 'NewResume', exact: true, external: false, component: Resume}
+    {path: 'https://github.com/palmerjoshua', navText: 'GitHub', external: true}
 ];
 
 class App extends Component {
