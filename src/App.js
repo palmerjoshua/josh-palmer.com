@@ -5,11 +5,11 @@ import {
 } from 'react-router-dom';
 import SideBar from './SideBar';
 import ResumePage from './ResumePage';
-import Resume from './resume/Resume';
+import AboutMe from './Welcome';
 
 const routes = [
+    {path: '/', navText: 'Home', exact: true, external: false, component: AboutMe},
     {path: '/resume', navText: 'Resume', exact: true, external: false, component: ResumePage},
-    {path: '/resume/experimental', navText: 'Interactive', exact: true, external: false, component: Resume},
     {path: 'https://www.linkedin.com/in/joshua-palmer-56a345102/', navText: 'LinkedIn', external: true},
     {path: 'https://github.com/palmerjoshua', navText: 'GitHub', external: true}
 ];

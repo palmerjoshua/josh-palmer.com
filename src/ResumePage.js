@@ -10,9 +10,6 @@ class ResumePage extends Component {
                     src={source}
                     style={{width: '60%', height: '100%'}}
                 ></iframe>
-                <footer style={{flexShrink: 0, color: '#606060'}}>
-                    <a className="footerLink" href="/resume/experimental">view interactive resume</a>
-                </footer>
             </main>
         );
     }
