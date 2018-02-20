@@ -1,9 +1,8 @@
 const version = "0.0.0.0";
-const Config = `
+// region data
+const config = `
 author: Joshua Palmer
 website: http://josh-palmer.com
-
-
 version: ${version}
 categories:
     experience:
@@ -33,7 +32,7 @@ contents:
               - *acad
           magnitude: *exp
           opinion: *fav
-          comment: "This is the best!!!"
+          comment:
         
         - title: "C#"
           experience:
@@ -56,7 +55,7 @@ contents:
               - *acad
           magnitude: *nov
           opinion: *hat
-          comment: "I freakin hate PHP so much"
+          comment:
     
     libraries:
         - title: "ReactJS"
@@ -127,5 +126,6 @@ contents:
               - *pers
               - *acad
 `;
-
+// endregion
+const Config = require('js-yaml').safeLoad(config);
 export default Config;

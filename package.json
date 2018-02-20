@@ -1,6 +1,7 @@
 {
-  "name": "NewWebsite",
-  "version": "0.1.0",
+  "name": "josh-palmer.com",
+  "version": "0.0.0",
+  "license": "MIT",
   "private": true,
   "dependencies": {
     "react": "^15.4.2",
