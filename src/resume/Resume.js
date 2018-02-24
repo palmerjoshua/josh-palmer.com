@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
 import Field from './models/Field.js';
 import Config from './config/resumeConfig.js';
+
+
 class Resume extends Component {
     constructor(props) {
         super(props);
-        let yaml = require('js-yaml');
-        this.state =  yaml.safeLoad(Config);
+
+        this.state =  Object.assign({}, Config)
     }
     render() {
         let data = `data:text/json;charset=utf-8,${encodeURIComponent(JSON.stringify(this.state))}`;
@@ -14,9 +16,12 @@ class Resume extends Component {
                 {Object.keys(this.state.contents).map((key, idx) => (
                     <Field title={key} entries={this.state.contents[key]} key={idx}/>
                 ))}
-                <footer style={{flexShrink: 0, color: '#606060'}}>version {this.state.version} |
-                    <a className="footerLink" href={data} download="resume.json"> download JSON</a> |
-                    <a className="footerLink" href='/resume'> view PDF</a>
+                <footer style={{flexShrink: 0, color: '#606060'}}>
+                    <small>
+                        version {this.state.version} |
+                        <a className="footerLink" href={data} download="resume.json"> download JSON</a> |
+                        <a className="footerLink" href='/resume'> view PDF version</a>
+                    </small>
                 </footer>
             </main>
          );
