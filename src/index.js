@@ -1,8 +1,9 @@
-import React from 'react';
+// eslint-ignore-next-line
+import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import App from './App';
+import {GetAppWithRouter} from './client/util/helpers';
 import './index.css';
 ReactDOM.render(
-  <App />,
-  document.getElementById('root')
+    GetAppWithRouter(),
+    document.getElementById('root')
 );
