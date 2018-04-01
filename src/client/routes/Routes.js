@@ -7,7 +7,7 @@ export const routeExists = (path) => {
 };
 
 const routes = routeConfig.filter(route => (route.hasOwnProperty('component'))).map((route, idx) => (
-    <Route key={idx} path={route.path} component={route.component} exact={true}/>
+    <Route key={idx} path={route.path} component={route.component} exact={route.hasOwnProperty('exact') ? route.exact : true}/>
 ));
 
 export default routes;
