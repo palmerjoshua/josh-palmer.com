@@ -1,4 +1,4 @@
-// eslint-ignore-next-line
+// eslint-disable-next-line
 import React, { Component } from 'react';
 import {BrowserRouter, StaticRouter, HashRouter} from 'react-router-dom';
 import App from '../components/App.js';
@@ -11,6 +11,7 @@ export const GetAppWithRouter = (type = 'browser', url = '/', context = null) =>
     else if (type === 'hash')
         return <HashRouter><App/></HashRouter>;
     else
+        // eslint-disable-next-line
         throw `Unknown Router type: ${type}`;
 };
 

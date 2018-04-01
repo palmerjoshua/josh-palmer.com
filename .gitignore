@@ -17,6 +17,8 @@ yarn-debug.log*
 yarn-error.log*
 /.idea
 
+CRA-readme.md
+/src/client/components/notfound/wat.jpg
 /src/client/components/resume/data/*.js
 config.js
 !*.example.js

@@ -5,8 +5,8 @@
 * */
 import React from 'react';
 import {Route} from 'react-router-dom';
-import Welcome from '../client/components/welcome/Welcome';
-import ResumePDF from '../client/components/resume/ResumePDF';
+import Welcome from '../components/welcome/Welcome';
+import ResumePDF from '../components/resume/ResumePDF';
 
 const routeConfig = [
     {
@@ -18,8 +18,8 @@ const routeConfig = [
         path: '/resume',
         text: 'Resume',
         component: ResumePDF
-        //    hide: true  <-- Route is hidden from nav bar but can be seen by entering the URL manually.
-        // exclude: true  <-- Route is excluded entirely from the set of navigable routes.
+        //    hide: true  <-- Route is hidden from the nav bar, but its URL will resolve normally.
+        // exclude: true  <-- Route is hidden from the nav bar, and its URL will 404.
     },
     {
         path: 'http://your GitHub URL',

@@ -1,5 +1,5 @@
 # josh-palmer.com
-This is the code behind my personal website, [josh-palmer.com](http://josh-palmer.com). 
+This is the code behind my website, [josh-palmer.com](http://josh-palmer.com). 
 
 ### Prior to Building
 A couple of required files are not checked into Git, but I left some example files to act as templates.
