@@ -22,7 +22,7 @@ categories:
         - &ann "Annoying"
         - &dis "Dislike"
         - &hat "Hate"
-    
+
 contents:
     languages:
         - title: &py "Python"
@@ -33,14 +33,14 @@ contents:
           magnitude: *exp
           opinion: *fav
           comment:
-        
+
         - title: "C#"
           experience:
               - *prof
           magnitude: *int
           opinion: *ing
           comment:
-        
+
         - title: &web "HTML/CSS/Javascript"
           experience:
               - *prof
@@ -56,7 +56,7 @@ contents:
           magnitude: *nov
           opinion: *hat
           comment:
-    
+
     libraries:
         - title: "ReactJS"
           experience: *pers
@@ -80,7 +80,7 @@ contents:
           opinion: *enj
           comment:
 
-    
+
     tools & services:
         - title: "Amazon Web Services"
           experience:
@@ -89,25 +89,25 @@ contents:
           magnitude: *int
           opinion: *fav
           comment:
-        
+
         - title: "Microsoft Azure"
           experience: *prof
           magnitude: *adv
           opinion: *ann
           comment:
-        
+
         - title: "Jetbrains Team City"
           experience: *prof
           magnitude: *int
           opinion: *amb
           comment:
-        
+
         - title: "Sumo Logic"
           experience: *prof
           magnitude: *adv
           opinion: *enj
           comment:
-        
+
         - title: "Splunk"
           experience: *prof
           magnitude: *adv

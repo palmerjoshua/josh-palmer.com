@@ -1,6 +1,6 @@
 /*
-* Rename this file "resumeConfig.js" and add your own data.
-*/
+ * Rename this file "resumeConfig.js" and add your own data.
+ */
 const version = "0.0.0.0";
 const config = `
 author: Your Name
