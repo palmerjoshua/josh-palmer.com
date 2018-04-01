@@ -3,7 +3,7 @@ import Entry from './Entry.js';
 
 class Field extends Component {
     render() {
-           let entryBgColor = 'white';
+        let entryBgColor = 'white';
         return (
             <div className='ResumeField'>
                 <h1>{this.props.title}</h1>

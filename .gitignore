@@ -17,5 +17,6 @@ yarn-debug.log*
 yarn-error.log*
 /.idea
 
-/src/resumeb64.js
-/src/resume/config/resumeConfig.js
+/src/client/components/resume/data/*.js
+config.js
+!*.example.js
