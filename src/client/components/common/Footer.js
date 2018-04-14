@@ -23,7 +23,7 @@ export default class Footer extends Component {
         if (!Array.isArray(children))
             children = [children];
         return (
-            <footer className={this.constructor.name} style={this.props.footerStyle}>
+            <footer className="Footer" style={this.props.footerStyle}>
                     {children.map((child, i, arr) => (Footer.makeFooterItem(child, i < arr.length-1)))}
             </footer>
         );

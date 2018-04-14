@@ -4,9 +4,9 @@ import React, { Component } from 'react';
 class NotFound extends Component {
     render() {
         return (
-            <div>
+            <div id="NotFound">
                 <h3>Where you goin?</h3>
-                <img src={require('./wat.jpg')} alt="WAT"/>
+                <img src={require('../../../../assets/wat.jpg')} alt="WAT"/>
             </div>
         );
     }

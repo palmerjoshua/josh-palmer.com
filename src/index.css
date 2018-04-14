@@ -4,12 +4,28 @@ html, body, #root {
 
 body {
     font-family: sans-serif;
+    color: white;
+    background: url('../assets/background.jpg') no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+
 }
 
+.navItem {
+    width: 100%;
+    background-color: rgba(255,255,255,0.6);
+    text-align: center;
+}
+
+.navItem:hover {
+    background-color: #FFFFFF;
+}
 
 .navItem > a, .navItem > a:visited, .footerLink, .footerLink:visited {
     text-decoration: none;
-    color: #606060;
+    color: rgba(0,0,0,1);
 }
 
 .navItem > a:hover, .footerLink:hover {
@@ -17,14 +33,17 @@ body {
     color: black;
 }
 
+#MarkdownViewer, #MarkdownEditor, .sideBar, #Welcome, .ResumeField {
+    background-color: rgba(0,0,0,0.9);
+    border: rgba(255,255,255,0.6) 1px solid;
+}
+
 .navItem:not(:last-child) {
     margin-bottom: 5px;
 }
 
-
 .sideBar {
     padding: 8px;
-    background: #606060;
     display: table;
 }
 
@@ -32,9 +51,41 @@ body {
     height: 33%;
     width: 58%;
     padding: 10px;
-    background: #606060;
 }
 
 .ResumeField:not(:last-child) {
     margin-bottom: 10px;
+}
+
+#MarkdownEditor {
+    color: white;
+    margin-right: 50px;
+    width: 30em;
+    height: 70em;
+}
+
+#MarkdownViewer {
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+#MarkdownViewer:empty {
+    padding-left: 0;
+    padding-right: 0;
+    border: none;
+}
+
+#Editor {
+    display: inline-flex;
+}
+
+#Welcome {
+    color: white;
+    width: 60em;
+    padding-top: 7em;
+    padding-bottom: 7em;
+}
+
+#Welcome > h1, #Welcome > p{
+    text-align: center;
 }

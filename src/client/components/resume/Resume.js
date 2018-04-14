@@ -15,7 +15,7 @@ class Resume extends Component {
                 {Object.keys(this.state.contents).map((key, idx) => (
                     <Field title={key} entries={this.state.contents[key]} key={idx}/>
                 ))}
-                <Footer footerStyle={{flexShrink: 0, color: '#606060'}}>
+                <Footer footerStyle={{flexShrink: 0}}>
                     <span>version {this.state.version}</span>
                     <a className="footerLink" href={data} download="resume.json">download JSON</a>
                     <a className="footerLink" href='/resume'>view PDF version</a>
