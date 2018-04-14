@@ -59,7 +59,7 @@ class Editor extends Component {
     render() {
         return (
             <div id="Editor">
-                <MarkdownEditor initialText={this.state.initialText} sendMarkdown={this.sendMarkdown}/>
+                <MarkdownEditor sendMarkdown={this.sendMarkdown}/>
                 <MarkdownViewer markdown={this.state.markdown}/>
             </div>
         );
