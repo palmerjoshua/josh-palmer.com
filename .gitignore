@@ -19,8 +19,9 @@ yarn-error.log*
 # readme that comes with create-react-app
 CRA-readme.md
 
-/src/client/components/notfound/wat.jpg
+/assets/wat.jpg
 /src/client/components/resume/data/*.js
 config.js
 !*.example.js
-/assets/resume.pdf
+/assets/*.jpg
+/assets/*.pdf

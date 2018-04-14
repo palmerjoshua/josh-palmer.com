@@ -42,7 +42,7 @@ class Entry extends Component {
     }
 
     render() {
-        let entryStyle = {margin: 6, padding: 4, backgroundColor: this.props.color, display: 'inline-block', border: '1px solid black'};
+        let entryStyle = {margin: 6, padding: 4, display: 'inline-block'};
         return (
             <div className="Entry" style={entryStyle} onClick={this.togglePopup}>
                 <span style={{margin: 6}}>{this.props.title}</span>

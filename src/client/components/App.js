@@ -9,11 +9,11 @@ import Footer from './common/Footer';
 export default class App extends Component {
     render() {
         return (
-            <div className={this.constructor.name}>
+            <div id={this.constructor.name}>
                 <aside style={{width: '120px', position: 'fixed', zIndex: 1}}>
                     <SideBar routes={routeConfig}/>
                 </aside>
-                <main  style={{marginLeft: '150px'}} className="mainContent">
+                <main  style={{marginLeft: '150px'}} id="mainContent">
                     <Switch>
                         {routes}
                     </Switch>
