@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import Remarkable from 'remarkable';
 import RemarkableReactRenderer from 'remarkable-react';
 
-
 const initialText = `# This is a Markdown Editor
 ## What is this?
 * This is a text editor that auto formats what you type.
@@ -22,7 +21,7 @@ Enjoy!
 
 class MarkdownEditor extends Component {
     render() {
-        return <textarea id="MarkdownEditor" defaultValue={initialText} onChange={this.props.sendMarkdown}/>;
+        return (<textarea className="MarkdownEditor" defaultValue={this.props.defaultValue} onChange={this.props.sendMarkdown}/>);
     }
 }
 
@@ -30,7 +29,7 @@ class MarkdownEditor extends Component {
 class MarkdownViewer extends Component {
     render() {
         let hasMarkdown = this.props.markdown;
-        return <div id="MarkdownViewer">{hasMarkdown && this.props.markdown}</div>;
+        return <div className="MarkdownViewer">{hasMarkdown && this.props.markdown}</div>;
     }
 }
 
@@ -58,9 +57,9 @@ class Editor extends Component {
 
     render() {
         return (
-            <div id="Editor">
-                <MarkdownEditor sendMarkdown={this.sendMarkdown}/>
-                <MarkdownViewer markdown={this.state.markdown}/>
+            <div className="Editor" id="mainEditor">
+                <MarkdownEditor id="mainMarkdownEditor" sendMarkdown={this.sendMarkdown} defaultValue={initialText}/>
+                <MarkdownViewer id="mainMarkdownViewer" markdown={this.state.markdown}/>
             </div>
         );
     }

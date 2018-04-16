@@ -2,23 +2,30 @@
 import React, { Component } from 'react';
 import {Switch} from 'react-router-dom';
 import routes from './../routes/Routes';
-import routeConfig from './../routes/config.js';
 import SideBar from './sidebar/SideBar';
 import Footer from './common/Footer';
+
+
+class MainContent extends Component {
+    render() {
+
+        return (
+            <main id="mainContent">
+                <Switch>
+                    {routes}
+                </Switch>
+            </main>
+        );
+    }
+}
 
 export default class App extends Component {
     render() {
         return (
-            <div id={this.constructor.name}>
-                <aside style={{width: '120px', position: 'fixed', zIndex: 1}}>
-                    <SideBar routes={routeConfig}/>
-                </aside>
-                <main  style={{marginLeft: '150px'}} id="mainContent">
-                    <Switch>
-                        {routes}
-                    </Switch>
-                </main>
-                <Footer footerStyle={{marginLeft: '150px', position: 'fixed', bottom: 0, right: 0, left: 0}}>
+            <div  id="App">
+                <SideBar/>
+                <MainContent/>
+                <Footer id="mainFooter" footerStyle={{order: 3, position: 'fixed', bottom: 0, right: 0, left: 8}}>
                     <span>Copyright &#169; 2018 Joshua Palmer</span>
                 </Footer>
             </div>
