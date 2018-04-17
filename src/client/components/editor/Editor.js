@@ -4,15 +4,11 @@ import RemarkableReactRenderer from 'remarkable-react';
 
 const initialText = `# This is a Markdown Editor
 ## What is this?
-* This is a text editor that auto formats what you type.
+* This is a text editor that [auto formats](https://www.markdownguide.org/cheat-sheet) what you type.
 * All the text you enter stays in your browser and disappears when you leave this page. 
 
 ## Why is this here?
-* I'm toying with the idea of hosting my own blog here.
-* Future plans include:
-    * Write blog posts in markdown.
-    * Save all posts in some cloud storage, and display them here for visitors to read.
-    * Provide a simple markdown editor to conveniently edit and upload blog posts straight from my website. 
+* I don't know. Why not?
 
 Enjoy!
 
