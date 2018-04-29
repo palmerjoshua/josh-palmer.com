@@ -22,6 +22,7 @@ CRA-readme.md
 /assets/wat.jpg
 /src/client/components/resume/data/*.js
 config.js
+secret.js
 !*.example.js
 /assets/*.jpg
 /assets/*.pdf

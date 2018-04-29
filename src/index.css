@@ -37,7 +37,7 @@ textarea {
     color: black;
 }
 
-textarea, .MarkdownViewer, .sideBar, #Welcome, .ResumeField {
+textarea, .MarkdownViewer, .sideBar, #Welcome, .ResumeField, #markdownUrlViewer {
     background-color: rgba(0,0,0,0.9);
     border: rgba(255,255,255,0.6) 1px solid;
 }
@@ -81,7 +81,7 @@ textarea, .MarkdownViewer, .sideBar, #Welcome, .ResumeField {
         background: url('../assets/background.jpg') no-repeat center center fixed;
     }
 
-    #App, .Editor {
+    #App, .MarkdownArea {
         display: flex;
         align-items: stretch;
         flex-flow: row nowrap;
@@ -102,12 +102,6 @@ textarea, .MarkdownViewer, .sideBar, #Welcome, .ResumeField {
         margin-left: 8px;
     }
 
-    .MarkdownEditor {
-        order: 1;
-        width: 30%;
-        min-height: 100%;
-    }
-
     .MarkdownViewer {
         order: 2;
         width: 50%;
@@ -123,22 +117,18 @@ textarea, .MarkdownViewer, .sideBar, #Welcome, .ResumeField {
         background-color: #B0B0B0;
     }
 
-    #App, .Editor {
+    #App, .MarkdownArea {
         display: flex;
         align-items: stretch;
         flex-flow: column nowrap;
     }
 
-    #Welcome {
+    #Welcome, .sideBar {
         width: 100%;
     }
 
     .sideBar, .MarkdownEditor {
         order: 1;
-        width: 100%;
-    }
-    .markdownEditor {
-        min-height: 100%;
     }
 
     #mainContent, .MarkdownViewer {
