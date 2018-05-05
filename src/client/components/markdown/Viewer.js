@@ -3,12 +3,13 @@ import {withRouter} from 'react-router-dom';
 import Remarkable from 'remarkable';
 import RemarkableReactRenderer from 'remarkable-react';
 const axios = require('axios');
+const config = require('../../../../config');
 
 const md = new Remarkable();
 md.renderer = new RemarkableReactRenderer();
 
-export class MarkdownViewer extends Component {
 
+export class MarkdownViewer extends Component {
     render() {
         let hasMarkdown = ![null, undefined, ''].some(e => e === this.props.markdown);
         let markdown = hasMarkdown ? md.render(this.props.markdown) : null;
@@ -25,23 +26,17 @@ class Viewer extends Component {
 
     componentDidMount() {
         let postId = this.props.match.params.id;
-        let url = `http://localhost:8080/api/markdown/retrieve`;
+        let sub = config.aws.apiSubdomain;
+        let region = config.aws.region;
+        let endpoint = config.aws.fetchEndpoint;
+        let url = `https://${sub}.execute-api.${region}.amazonaws.com/${endpoint}`;
+        let body = {postId: postId};
         let self = this;
-        axios({
-            method: 'post',
-            url: url,
-            data: {postId: postId},
-            headers: {'Content-Type': 'application/json'}
-        }).then(resp => {
+        axios({method: 'post', url: url, data: body}).then(resp => {
             self.setState({markdown: resp.data.markdown});
         }).catch(err => {
-            if (err.response.status === 404) {
-                self.setState({markdown: 'This post does not exist.'});
-            } else {
-                let markdown = "##ERROR\n\n```" + JSON.stringify(err) + "```\n";
-                self.setState({markdown: markdown});
-            }
-
+            let markdown = "## ERROR\n\n```" + JSON.stringify(err) + "```\n";
+            self.setState({markdown: markdown});
         });
     }
 

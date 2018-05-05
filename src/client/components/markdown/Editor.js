@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {MarkdownViewer} from "./Viewer";
 import CaptchaButton from "../common/CaptchaButton";
 const axios = require('axios');
+const config = require('../../../../config');
 const initialText = `## Edit me!\n`;
 
 
@@ -10,6 +11,7 @@ class TextEditor extends Component {
         return (<textarea rows={this.props.rows} cols={this.props.cols} className="MarkdownEditor" defaultValue={this.props.defaultValue} onChange={this.props.onMarkdownChange}/>);
     }
 }
+
 
 class MarkDownSubmitter extends Component {
     render() {
@@ -24,7 +26,6 @@ class MarkDownSubmitter extends Component {
 
 
 class Editor extends Component {
-
     constructor(props) {
         super(props);
         this.setMarkdownToState = this.setMarkdownToState.bind(this);
@@ -50,19 +51,18 @@ class Editor extends Component {
 
     submitMarkdown (captchaResponse) {
         let self = this;
-        axios({
-            method: 'post',
-            url: 'http://localhost:8080/api/markdown/submit',
-            data: {markdown: this.state.markdown},
-            headers: {'g-recaptcha-response': captchaResponse, 'Content-Type': 'application/json'}
-        }).then(resp => {
+        let sub = config.aws.apiSubdomain;
+        let region = config.aws.region;
+        let endpoint = config.aws.submitEndpoint;
+        let body = {markdown: this.state.markdown, captchaResponse};
+        let url = `https://${sub}.execute-api.${region}.amazonaws.com/${endpoint}`;
+        axios({method: 'post', url: url, data: body}).then(resp => {
             let purl = Editor.generateUrl(resp.data.postId);
             self.setState({url: purl});
         }).catch(err => {
             self.setState({url: null});
         });
     }
-
 
     render() {
         if (this.state.url) {

@@ -1,41 +1,39 @@
-const config = require('../config');
 const AWS = require('aws-sdk');
-AWS.config.update({region: 'us-east-1'});
-AWS.config.credentials = new AWS.SharedIniFileCredentials({profile: 'markdownTableWriter'});
-const documentClient = new AWS.DynamoDB.DocumentClient();
 
-const saveMarkdownToTable = (id, markdown) => {
+AWS.config.update({region: process.env.REGION});
+const client = new AWS.DynamoDB.DocumentClient();
+const TABLE_NAME = process.env.TABLE;
+
+const saveMarkdownToTable = (id, markdown, callback) => {
     let params = {
-        TableName: config.aws.tables.markdown.table_name,
+        TableName: TABLE_NAME,
         Item: {
             "id": id,
             "created_time": Date.now(),
             "markdown": markdown
         }
     };
-    return documentClient.put(params).promise();
+    return client.put(params, callback);
 };
 
 
-const getMarkdownFromTable = id => {
-    let params = {
-        TableName: config.aws.tables.markdown.table_name,
+const getMarkdownParams = (id) => {
+    return {
+        TableName: TABLE_NAME,
         Key: {
             "id": id
         }
     };
-    return documentClient.get(params).promise();
 };
 
 
-const deleteMarkdownFromTable = id => {
-    let params = {
-        TableName: config.aws.tables.markdown.table_name,
-        Key: {
-            "id": id
-        }
-    };
-    return documentClient.delete(params).promise();
+const getMarkdownFromTable = (id, callback) => {
+    return client.get(getMarkdownParams(id), callback);
+};
+
+
+const deleteMarkdownFromTable = (id, callback) => {
+    return client.delete(getMarkdownParams(id), callback);
 };
 
 

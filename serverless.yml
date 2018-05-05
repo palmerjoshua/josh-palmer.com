@@ -1,0 +1,80 @@
+service: markdown
+
+package:
+  exclude:
+    - node_modules/**
+    - ./**
+  include:
+    - server/**
+
+plugins:
+  - serverless-secrets
+  - serverless-plugin-include-dependencies
+
+provider:
+  name: aws
+  runtime: nodejs6.10
+  stage: ${file(./config.js):deployment}
+  region: ${file(./config.js):aws.region}
+
+  environment:
+    TABLE: ${self:service}
+    REGION: ${self:provider.region}
+    ALLOW_ORIGIN: ${file(./config.js):${self:provider.stage}.origin}
+
+  environmentSecrets:
+    CAPTCHA_SECRET_KEY: "CAPTCHA_SECRET_KEY"
+
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:Query
+        - dynamodb:PutItem
+        - dynamodb:GetItem
+        - dynamodb:DeleteItem
+      Resource: "arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.TABLE}"
+
+functions:
+  fetch:
+    handler: server/handlers.getHandler
+    events:
+      - http:
+          path: ${self:service}/fetch
+          method: post
+          resp: json
+          cors:
+            origin: ${self:provider.environment.ALLOW_ORIGIN}
+            headers:
+              - Content-Type
+              - Origin
+              - Accept
+  submit:
+    handler: server/handlers.postHandler
+    events:
+      - http:
+          path: ${self:service}/submit
+          method: post
+          resp: json
+          cors:
+            origin: ${self:provider.environment.ALLOW_ORIGIN}
+            headers:
+              - Content-Type
+              - Origin
+              - Accept
+
+resources:
+  Resources:
+    MarkdownTable:
+      Type: 'AWS::DynamoDB::Table'
+      DeletionPolicy: Delete
+      Properties:
+        AttributeDefinitions:
+         - AttributeName: id
+           AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        TableName: ${self:provider.environment.TABLE}
