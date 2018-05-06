@@ -1,9 +1,9 @@
 import React, {Component} from 'react';
 import {MarkdownViewer} from "./Viewer";
 import CaptchaButton from "../common/CaptchaButton";
+const zlib = require('zlib');
 const axios = require('axios');
 const config = require('../../../../config');
-
 const initialText = `## Edit me!\n`;
 
 
@@ -52,13 +52,20 @@ class Editor extends Component {
 
     submitMarkdown (captchaResponse) {
         let self = this;
-        let body = {markdown: this.state.markdown, captchaResponse};
-        let url = config.aws.submitUrl;
-        axios({method: 'post', url: url, data: body}).then(resp => {
-            let purl = Editor.generateUrl(resp.data.postId);
-            self.setState({url: purl});
-        }).catch(err => {
-            self.setState({url: null});
+        zlib.deflate(this.state.markdown, (err, buffer) => {
+            if(!err) {
+                let compressed = buffer.toString('base64');
+                let body = {markdown: compressed, captchaResponse};
+                let url = config.aws.submitUrl;
+                axios({method: 'post', url: url, data: body}).then(resp => {
+                    let purl = Editor.generateUrl(resp.data.postId);
+                    self.setState({url: purl});
+                }).catch(err => {
+                    self.setState({url: null});
+                });
+            } else {
+                self.setState({markdown: 'ERROR', url: null});
+            }
         });
     }
 

@@ -2,6 +2,7 @@ import React, {Component} from "react";
 import {withRouter} from 'react-router-dom';
 import Remarkable from 'remarkable';
 import RemarkableReactRenderer from 'remarkable-react';
+const zlib = require('zlib');
 const axios = require('axios');
 const config = require('../../../../config');
 
@@ -30,7 +31,14 @@ class Viewer extends Component {
         let body = {postId: postId};
         let self = this;
         axios({method: 'post', url: url, data: body}).then(resp => {
-            self.setState({markdown: resp.data.markdown});
+            let compressed = Buffer.from(resp.data.markdown, 'base64');
+            zlib.unzip(compressed, (err, buffer) => {
+                if (!err) {
+                    self.setState({markdown: buffer.toString()});
+                } else {
+                    self.setState({markdown: '# ERROR\n\nSorry, there was a problem with this request.\nThis markdown is unavailable.'})
+                }
+            });
         }).catch(err => {
             let markdown = "## ERROR\n\n```" + JSON.stringify(err) + "```\n";
             self.setState({markdown: markdown});
