@@ -9,7 +9,13 @@ const initialText = `## Edit me!\n`;
 
 class TextEditor extends Component {
     render() {
-        return (<textarea rows={this.props.rows} cols={this.props.cols} className="MarkdownEditor" defaultValue={this.props.defaultValue} onChange={this.props.onMarkdownChange}/>);
+        let maxlen = this.props.maxLength ? this.props.maxLength : 2000;
+        return (<textarea maxLength={maxlen}
+                          rows={this.props.rows}
+                          cols={this.props.cols}
+                          className="MarkdownEditor"
+                          defaultValue={this.props.defaultValue}
+                          onChange={this.props.onMarkdownChange}/>);
     }
 }
 
@@ -72,7 +78,7 @@ class Editor extends Component {
     render() {
         if (this.state.url) {
             return <div id="markdownUrlViewer">
-                <p>WARNING: This URL expires after ONE use. If you put it in your browser and hit Enter, you won't be able to share it with anyone.</p>
+                <p>WARNING: This URL expires after ONE use.</p>
                 <br/>
                 <p>{this.state.url}</p>
                 <button onClick={e => {this.setState({url: null})}}>back</button>

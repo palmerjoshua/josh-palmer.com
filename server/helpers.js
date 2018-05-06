@@ -39,9 +39,17 @@ const verifyCaptcha = (response, remoteip, captcha_secret) => {
 };
 
 
+const testHost = (hostToTest) => {
+    let pat = /^(?:https?:\/\/)?([\w\-.]+)(?::\d{2,4})?(?:\/.*)?$/;
+    let allowedDomain = pat.exec(process.env.ALLOW_ORIGIN)[1];
+    return hostToTest.toLowerCase() === allowedDomain.toLowerCase();
+};
+
+
 module.exports = {
     generatePostId: generatePostId,
     handleError: handleError,
     verifyCaptcha: verifyCaptcha,
-    getDefaultResponse: getDefaultResponse
+    getDefaultResponse: getDefaultResponse,
+    testHost: testHost
 };

@@ -1,7 +1,19 @@
+
+
 const AWS = require('aws-sdk');
 
-AWS.config.update({region: process.env.REGION});
-const client = new AWS.DynamoDB.DocumentClient();
+const documentClient = (() => {
+    let client;
+    if (process.env.DEPLOYMENT === 'local') {
+        client = new AWS.DynamoDB.DocumentClient({region: 'localhost', endpoint: 'http://localhost:8000'});
+    } else {
+        AWS.config.update({region: process.env.REGION});
+        client = new AWS.DynamoDB.DocumentClient();
+    }
+    return client;
+})();
+
+
 const TABLE_NAME = process.env.TABLE;
 
 const saveMarkdownToTable = (id, markdown, callback) => {
@@ -13,7 +25,7 @@ const saveMarkdownToTable = (id, markdown, callback) => {
             "markdown": markdown
         }
     };
-    return client.put(params, callback);
+    return documentClient.put(params, callback);
 };
 
 
@@ -28,12 +40,12 @@ const getMarkdownParams = (id) => {
 
 
 const getMarkdownFromTable = (id, callback) => {
-    return client.get(getMarkdownParams(id), callback);
+    return documentClient.get(getMarkdownParams(id), callback);
 };
 
 
 const deleteMarkdownFromTable = (id, callback) => {
-    return client.delete(getMarkdownParams(id), callback);
+    return documentClient.delete(getMarkdownParams(id), callback);
 };
 
 

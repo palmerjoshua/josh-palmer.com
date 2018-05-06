@@ -27,6 +27,8 @@
   "devDependencies": {
     "child_process": "^1.0.2",
     "react-scripts": "0.9.5",
+    "serverless-dynamodb-client": "0.0.2",
+    "serverless-dynamodb-local": "^0.2.30",
     "serverless-offline": "^3.20.3",
     "serverless-plugin-include-dependencies": "^3.1.0",
     "serverless-secrets": "^3.0.0-beta.12"

@@ -24,6 +24,7 @@ provider:
   region: ${self:custom.config.aws.region}
 
   environment:
+    DEPLOYMENT: ${self:provider.stage}
     TABLE: ${self:custom.config.aws.table_name}
     REGION: ${self:provider.region}
     ALLOW_ORIGIN: ${self:custom.config.origins.${self:custom.config.deployment}}

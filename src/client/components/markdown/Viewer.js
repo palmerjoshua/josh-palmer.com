@@ -40,8 +40,12 @@ class Viewer extends Component {
                 }
             });
         }).catch(err => {
-            let markdown = "## ERROR\n\n```" + JSON.stringify(err) + "```\n";
-            self.setState({markdown: markdown});
+            if (err.response.status === 404) {
+                self.setState({markdown: "This page no longer exists."});
+            } else {
+                let markdown = "## ERROR\n\n```" + JSON.stringify(err) + "```\n";
+                self.setState({markdown: markdown});
+            }
         });
     }
 

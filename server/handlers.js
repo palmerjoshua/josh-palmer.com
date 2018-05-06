@@ -18,17 +18,21 @@ module.exports.getHandler = (event, context, callback) => {
             } else {
                 console.log(data.Item);
                 let payload = data.Item;
-                let postId = payload.id;
+                if (data.Item === undefined) {
+                    helpers.handleError({error: "Not Found"}, response, callback, 404)
+                } else {
+                    let postId = payload.id;
+                    database.deleteMarkdownFromTable(postId, err => {
+                        if (err) {
+                            console.log("ERROR DELETING MARKDOWN FROM TABLE");
+                            helpers.handleError(err, response, callback);
+                        } else {
+                            response.body = JSON.stringify(payload);
+                            callback(null, response);
+                        }
+                    });
+                }
 
-                database.deleteMarkdownFromTable(postId, err => {
-                    if (err) {
-                        console.log("ERROR DELETING MARKDOWN FROM TABLE");
-                        helpers.handleError(err, response, callback);
-                    } else {
-                        response.body = JSON.stringify(payload);
-                        callback(null, response);
-                    }
-                });
             }
         });
     } catch (e) {
@@ -47,7 +51,18 @@ module.exports.postHandler = (event, context, callback) => {
             let auth = body.captchaResponse;
             let ip = event["requestContext"]["identity"]["sourceIp"];
             helpers.verifyCaptcha(auth, ip, secret).then((resp) => {
-                if (resp.data.success) {
+                console.log(resp);
+                if (!resp.data.success) {
+                    console.log("FAILED TO VERIFY CAPTCHA");
+                    console.log(resp);
+                    helpers.handleError("Unauthenticated", response, callback, 401);
+
+                } else if (!helpers.testHost(resp.data.hostname)){
+                    console.log("HOSTNAME: ", resp.data.hostname);
+                    console.log("ALLOWED: ", process.env.ALLOWED_ORIGIN);
+                    helpers.handleError("Unauthenticated", response, callback, 401)
+
+                } else {
                     let id = helpers.generatePostId();
                     database.saveMarkdownToTable(id, markdown, err => {
                         if (err) {
@@ -57,10 +72,6 @@ module.exports.postHandler = (event, context, callback) => {
                             callback(null, response);
                         }
                     });
-                } else {
-                    console.log("FAILED TO VERIFY CAPTCHA");
-                    console.log(resp);
-                    helpers.handleError(resp, response, callback);
                 }
 
             }).catch(err => {
