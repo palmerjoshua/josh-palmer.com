@@ -19,7 +19,9 @@ CRA-readme.md
 /src/client/components/resume/data/*.js
 config.js
 secret.js
+serverlessconfig.yml
 !*.example.js
 .serverless/
 assets/
 src/server/
+.serverless-secrets.json

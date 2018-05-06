@@ -3,6 +3,7 @@ import {MarkdownViewer} from "./Viewer";
 import CaptchaButton from "../common/CaptchaButton";
 const axios = require('axios');
 const config = require('../../../../config');
+
 const initialText = `## Edit me!\n`;
 
 
@@ -51,11 +52,8 @@ class Editor extends Component {
 
     submitMarkdown (captchaResponse) {
         let self = this;
-        let sub = config.aws.apiSubdomain;
-        let region = config.aws.region;
-        let endpoint = config.aws.submitEndpoint;
         let body = {markdown: this.state.markdown, captchaResponse};
-        let url = `https://${sub}.execute-api.${region}.amazonaws.com/${endpoint}`;
+        let url = config.aws.submitUrl;
         axios({method: 'post', url: url, data: body}).then(resp => {
             let purl = Editor.generateUrl(resp.data.postId);
             self.setState({url: purl});
@@ -67,7 +65,9 @@ class Editor extends Component {
     render() {
         if (this.state.url) {
             return <div id="markdownUrlViewer">
-                <p><b>URL: </b>{this.state.url}</p>
+                <p>WARNING: This URL expires after ONE use. If you put it in your browser and hit Enter, you won't be able to share it with anyone.</p>
+                <br/>
+                <p>{this.state.url}</p>
                 <button onClick={e => {this.setState({url: null})}}>back</button>
             </div>;
         }

@@ -7,20 +7,26 @@ package:
   include:
     - server/**
 
+custom:
+  serverless-offline:
+    port: 4000
+  config: ${file(./serverlessconfig.yml)}
+
 plugins:
   - serverless-secrets
   - serverless-plugin-include-dependencies
+  - serverless-offline
 
 provider:
   name: aws
   runtime: nodejs6.10
-  stage: ${file(./config.js):deployment}
-  region: ${file(./config.js):aws.region}
+  stage: ${self:custom.config.deployment}
+  region: ${self:custom.config.aws.region}
 
   environment:
-    TABLE: ${self:service}
+    TABLE: ${self:custom.config.aws.table_name}
     REGION: ${self:provider.region}
-    ALLOW_ORIGIN: ${file(./config.js):${self:provider.stage}.origin}
+    ALLOW_ORIGIN: ${self:custom.config.origins.${self:custom.config.deployment}}
 
   environmentSecrets:
     CAPTCHA_SECRET_KEY: "CAPTCHA_SECRET_KEY"

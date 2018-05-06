@@ -26,10 +26,7 @@ class Viewer extends Component {
 
     componentDidMount() {
         let postId = this.props.match.params.id;
-        let sub = config.aws.apiSubdomain;
-        let region = config.aws.region;
-        let endpoint = config.aws.fetchEndpoint;
-        let url = `https://${sub}.execute-api.${region}.amazonaws.com/${endpoint}`;
+        let url = config.aws.fetchUrl;
         let body = {postId: postId};
         let self = this;
         axios({method: 'post', url: url, data: body}).then(resp => {
