@@ -25,8 +25,8 @@ provider:
 
   environment:
     DEPLOYMENT: ${self:provider.stage}
-    TABLE: ${self:custom.config.aws.table_name}
     REGION: ${self:provider.region}
+    TABLE: ${self:custom.config.aws.table_name}
     ALLOW_ORIGIN: ${self:custom.config.origins.${self:custom.config.deployment}}
 
   environmentSecrets:
@@ -68,6 +68,22 @@ functions:
               - Content-Type
               - Origin
               - Accept
+  flush:
+    handler: server/handlers.cleanupHandler
+    events:
+      - http:
+          path: ${self:service}/flush
+          method: post
+          resp: json
+          cors: true
+
+#  cleanup:
+#    handler: server/handlers.cleanupHandler
+#    events:
+#      - schedule:
+#          name: tableCleanupSchedule
+#          description: "Deletes entries from a table that are over 24 hours old"
+#          rate: rate(10 seconds)
 
 resources:
   Resources:

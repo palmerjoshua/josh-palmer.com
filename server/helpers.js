@@ -47,9 +47,9 @@ const testHost = (hostToTest) => {
 
 
 module.exports = {
-    generatePostId: generatePostId,
-    handleError: handleError,
-    verifyCaptcha: verifyCaptcha,
-    getDefaultResponse: getDefaultResponse,
-    testHost: testHost
+    generatePostId,
+    handleError,
+    verifyCaptcha,
+    getDefaultResponse,
+    testHost
 };

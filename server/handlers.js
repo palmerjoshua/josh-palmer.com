@@ -22,7 +22,7 @@ module.exports.getHandler = (event, context, callback) => {
                     helpers.handleError({error: "Not Found"}, response, callback, 404)
                 } else {
                     let postId = payload.id;
-                    database.deleteMarkdownFromTable(postId, err => {
+                    database.deleteMarkdown([postId], err => {
                         if (err) {
                             console.log("ERROR DELETING MARKDOWN FROM TABLE");
                             helpers.handleError(err, response, callback);
@@ -90,4 +90,26 @@ module.exports.postHandler = (event, context, callback) => {
         console.log(e);
         helpers.handleError(e, response, callback);
     }
+};
+
+
+module.exports.cleanupHandler = (event, context, callback) => {
+    console.log("Table cleanup started at: ", Date.now());
+    database.getMarkdownToDelete((err, data) => {
+        if (err) {
+            console.log("Error cleaning up table");
+            console.log(err);
+            callback(err, null);
+        } else {
+            database.deleteMarkdown(data.Items.map(item => item.id), (err) => {
+                if (err) {
+                    console.log("Error cleaning up table");
+                    console.log(err);
+                    callback(err, null);
+                } else {
+                    callback(null, {message: 'cleanup complete'});
+                }
+            });
+        }
+    });
 };

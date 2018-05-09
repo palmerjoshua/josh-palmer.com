@@ -39,14 +39,39 @@ const getMarkdownParams = (id) => {
 };
 
 
+const getCleanupScanParams = (cleanupThreshold = 0) => {
+    if (!cleanupThreshold) {
+        // 24 hours
+        cleanupThreshold = new Date(new Date().getTime() - (10 * 1000)).getTime();//new Date(new Date().getTime() - (24 * 60 * 60 * 1000)).getTime();
+    }
+    return {
+        TableName: TABLE_NAME,
+        FilterExpression: "created_time < :threshold",
+        ExpressionAttributeValues: {":threshold": cleanupThreshold}
+    };
+};
+
+
+const getCleanupDeleteParams = (postIds) => {
+    let deleteRequests = postIds.map(id => ({DeleteRequest: {Key: {HashKey: id}}}));
+    return {RequestItems: {TABLE_NAME: TABLE_NAME}};
+};
+
+
 const getMarkdownFromTable = (id, callback) => {
     return documentClient.get(getMarkdownParams(id), callback);
 };
 
 
-const deleteMarkdownFromTable = (id, callback) => {
-    return documentClient.delete(getMarkdownParams(id), callback);
+const getMarkdownToDelete = callback => {
+    return documentClient.scan(getCleanupScanParams(), callback);
 };
 
 
-module.exports = {saveMarkdownToTable, getMarkdownFromTable, deleteMarkdownFromTable};
+const deleteMarkdown = (postIds, callback) => {
+    documentClient.batchWrite(getCleanupDeleteParams(postIds), callback)
+
+};
+
+
+module.exports = {saveMarkdownToTable, getMarkdownFromTable, getMarkdownToDelete, deleteMarkdown};
