@@ -1,5 +1,3 @@
-
-
 const AWS = require('aws-sdk');
 
 const documentClient = (() => {
@@ -16,7 +14,7 @@ const documentClient = (() => {
 
 const TABLE_NAME = process.env.TABLE;
 
-const saveMarkdownToTable = (id, markdown, callback) => {
+const putMarkdown = (id, markdown, callback) => {
     let params = {
         TableName: TABLE_NAME,
         Item: {
@@ -29,7 +27,7 @@ const saveMarkdownToTable = (id, markdown, callback) => {
 };
 
 
-const getMarkdownParams = (id) => {
+const getMarkdownParams = id => {
     return {
         TableName: TABLE_NAME,
         Key: {
@@ -41,8 +39,7 @@ const getMarkdownParams = (id) => {
 
 const getCleanupScanParams = (cleanupThreshold = 0) => {
     if (!cleanupThreshold) {
-        // 24 hours
-        cleanupThreshold = new Date(new Date().getTime() - (10 * 1000)).getTime();//new Date(new Date().getTime() - (24 * 60 * 60 * 1000)).getTime();
+        cleanupThreshold = new Date(new Date().getTime() - (24 * 60 * 60 * 1000)).getTime(); // 24 hours
     }
     return {
         TableName: TABLE_NAME,
@@ -52,13 +49,13 @@ const getCleanupScanParams = (cleanupThreshold = 0) => {
 };
 
 
-const getCleanupDeleteParams = (postIds) => {
-    let deleteRequests = postIds.map(id => ({DeleteRequest: {Key: {HashKey: id}}}));
-    return {RequestItems: {TABLE_NAME: TABLE_NAME}};
+const getDeleteParams = postIds => {
+    let deleteRequests = postIds.map(id => ({DeleteRequest: {Key: {id}}}));
+    return {RequestItems: {[TABLE_NAME]: deleteRequests}};
 };
 
 
-const getMarkdownFromTable = (id, callback) => {
+const getMarkdown = (id, callback) => {
     return documentClient.get(getMarkdownParams(id), callback);
 };
 
@@ -69,9 +66,9 @@ const getMarkdownToDelete = callback => {
 
 
 const deleteMarkdown = (postIds, callback) => {
-    documentClient.batchWrite(getCleanupDeleteParams(postIds), callback)
+    documentClient.batchWrite(getDeleteParams(postIds), callback)
 
 };
 
 
-module.exports = {saveMarkdownToTable, getMarkdownFromTable, getMarkdownToDelete, deleteMarkdown};
+module.exports = {putMarkdown, getMarkdown, getMarkdownToDelete, deleteMarkdown};

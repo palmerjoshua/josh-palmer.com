@@ -2,8 +2,7 @@ const helpers = require('./helpers');
 const database = require('./database');
 const secretsPromise = require('serverless-secrets/client').load();
 
-
-module.exports.getHandler = (event, context, callback) => {
+module.exports.fetchHandler = (event, context, callback) => {
     let response = helpers.getDefaultResponse();
     try {
         let body = JSON.parse(event.body);
@@ -11,7 +10,7 @@ module.exports.getHandler = (event, context, callback) => {
         if (!postId) {
             helpers.handleError({error: "Missing postId"}, response, callback, 400);
         }
-        database.getMarkdownFromTable(postId, (err, data) => {
+        database.getMarkdown(postId, (err, data) => {
             if (err) {
                 console.log("ERROR GETTING MARKDOWN FROM TABLE");
                 helpers.handleError(err, response, callback);
@@ -22,7 +21,9 @@ module.exports.getHandler = (event, context, callback) => {
                     helpers.handleError({error: "Not Found"}, response, callback, 404)
                 } else {
                     let postId = payload.id;
-                    database.deleteMarkdown([postId], err => {
+                    let ids = [];
+                    ids.push(postId);
+                    database.deleteMarkdown(ids, err => {
                         if (err) {
                             console.log("ERROR DELETING MARKDOWN FROM TABLE");
                             helpers.handleError(err, response, callback);
@@ -40,8 +41,7 @@ module.exports.getHandler = (event, context, callback) => {
     }
 };
 
-
-module.exports.postHandler = (event, context, callback) => {
+module.exports.submitHandler = (event, context, callback) => {
     let response = helpers.getDefaultResponse();
     try {
         secretsPromise.then(() => {
@@ -53,18 +53,18 @@ module.exports.postHandler = (event, context, callback) => {
             helpers.verifyCaptcha(auth, ip, secret).then((resp) => {
                 console.log(resp);
                 if (!resp.data.success) {
-                    console.log("FAILED TO VERIFY CAPTCHA");
+                    console.log(`RECEIVED INVALID CAPTCHA FROM: ${ip}`);
                     console.log(resp);
                     helpers.handleError("Unauthenticated", response, callback, 401);
 
                 } else if (!helpers.testHost(resp.data.hostname)){
+                    console.log(`RECEIVED INVALID CAPTCHA FROM: ${ip}`);
                     console.log("HOSTNAME: ", resp.data.hostname);
-                    console.log("ALLOWED: ", process.env.ALLOWED_ORIGIN);
                     helpers.handleError("Unauthenticated", response, callback, 401)
 
                 } else {
                     let id = helpers.generatePostId();
-                    database.saveMarkdownToTable(id, markdown, err => {
+                    database.putMarkdown(id, markdown, err => {
                         if (err) {
                             helpers.handleError(err, response, callback);
                         } else {
@@ -85,6 +85,7 @@ module.exports.postHandler = (event, context, callback) => {
             console.log(err);
             helpers.handleError(err, response, callback);
         });
+
     } catch (e) {
         console.log("UNKNOWN EXCEPTION");
         console.log(e);
@@ -92,8 +93,7 @@ module.exports.postHandler = (event, context, callback) => {
     }
 };
 
-
-module.exports.cleanupHandler = (event, context, callback) => {
+module.exports.flushHandler = (event, context, callback) => {
     console.log("Table cleanup started at: ", Date.now());
     database.getMarkdownToDelete((err, data) => {
         if (err) {
@@ -101,6 +101,7 @@ module.exports.cleanupHandler = (event, context, callback) => {
             console.log(err);
             callback(err, null);
         } else {
+            console.log(`Deleting ${data.Items.length} items`);
             database.deleteMarkdown(data.Items.map(item => item.id), (err) => {
                 if (err) {
                     console.log("Error cleaning up table");

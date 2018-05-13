@@ -31,7 +31,7 @@ class CaptchaButton extends Component {
                            sitekey={SITE_KEY}
                            onChange={resp => this.setState({recaptchaResponse: resp})}/>
                 <button type="button"
-                        disabled={!this.state.recaptchaResponse}
+                        disabled={!this.state.recaptchaResponse || this.props.disableWhen}
                         onClick={this.onClick}>{this.props.buttonText}</button>
             </div>
         );
