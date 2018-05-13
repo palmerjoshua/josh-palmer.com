@@ -1,7 +1,6 @@
 let crypto = require('crypto');
 const axios = require('axios');
 
-
 const DEFAULT_RESPONSE = {
     isBase64Encoded: false,
     statusCode: 200,
@@ -12,7 +11,6 @@ const DEFAULT_RESPONSE = {
     }
 };
 
-
 const getDefaultResponse = () => {
     return Object.assign({}, DEFAULT_RESPONSE);
 };
@@ -21,14 +19,12 @@ const generatePostId = () => {
     return crypto.randomBytes(20).toString('hex');
 };
 
-
 const handleError = (error, response, callback, status = 500) => {
     console.log(error);
     response.body = JSON.stringify(error);
     response.statusCode = status;
     callback(null, response);
 };
-
 
 const verifyCaptcha = (response, remoteip, captcha_secret) => {
     let baseUrl = 'https://www.google.com/recaptcha/api/siteverify',
@@ -44,7 +40,6 @@ const testHost = (hostToTest) => {
     let allowedDomain = pat.exec(process.env.ALLOW_ORIGIN)[1];
     return hostToTest.toLowerCase() === allowedDomain.toLowerCase();
 };
-
 
 module.exports = {
     generatePostId,

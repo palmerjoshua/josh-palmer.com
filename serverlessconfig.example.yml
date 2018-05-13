@@ -1,0 +1,16 @@
+stage: local
+local:
+  origin: &dev-server-origin "http://localhost:3000"
+  region: &default-region "us-east-1"
+  table_name: &default-table-name markdown
+  cleanup_schedule: &fast-rate "* /2 * * *"
+dev:
+  origin: *dev-server-origin
+  region: *default-region
+  table_name: *default-table-name
+  cleanup_schedule: *fast-rate
+prod:
+  origin: &prod-server-origin "https://your-domain.com"
+  region: *default-region
+  table_name: *default-table-name
+  cleanup_schedule: "0 0 * * *"

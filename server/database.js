@@ -11,7 +11,6 @@ const documentClient = (() => {
     return client;
 })();
 
-
 const TABLE_NAME = process.env.TABLE;
 
 const putMarkdown = (id, markdown, callback) => {
@@ -26,7 +25,6 @@ const putMarkdown = (id, markdown, callback) => {
     return documentClient.put(params, callback);
 };
 
-
 const getMarkdownParams = id => {
     return {
         TableName: TABLE_NAME,
@@ -35,7 +33,6 @@ const getMarkdownParams = id => {
         }
     };
 };
-
 
 const getCleanupScanParams = (cleanupThreshold = 0) => {
     if (!cleanupThreshold) {
@@ -48,27 +45,21 @@ const getCleanupScanParams = (cleanupThreshold = 0) => {
     };
 };
 
-
 const getDeleteParams = postIds => {
     let deleteRequests = postIds.map(id => ({DeleteRequest: {Key: {id}}}));
     return {RequestItems: {[TABLE_NAME]: deleteRequests}};
 };
 
-
 const getMarkdown = (id, callback) => {
     return documentClient.get(getMarkdownParams(id), callback);
 };
-
 
 const getMarkdownToDelete = callback => {
     return documentClient.scan(getCleanupScanParams(), callback);
 };
 
-
 const deleteMarkdown = (postIds, callback) => {
     documentClient.batchWrite(getDeleteParams(postIds), callback)
-
 };
-
 
 module.exports = {putMarkdown, getMarkdown, getMarkdownToDelete, deleteMarkdown};

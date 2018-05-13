@@ -22,6 +22,4 @@ secret.js
 serverlessconfig.yml
 !*.example.js
 .serverless/
-assets/
-src/server/
 .serverless-secrets.json

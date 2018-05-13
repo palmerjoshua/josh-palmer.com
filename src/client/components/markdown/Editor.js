@@ -54,7 +54,6 @@ class MarkDownSubmitter extends Component {
     }
 }
 
-
 class Editor extends Component {
     constructor(props) {
         super(props);
