@@ -7,8 +7,8 @@ module.exports.fetchHandler = (event, context, callback) => {
     try {
         let body = JSON.parse(event.body);
         let postId = body.postId;
-        if (!postId) {
-            helpers.handleError({error: "Missing postId"}, response, callback, 400);
+        if(!helpers.testPostIdPattern(postId)) {
+            return helpers.handleError({error: "Bad request"}, response, callback, 400);
         }
         database.getMarkdown(postId, (err, data) => {
             if (err) {
@@ -50,6 +50,13 @@ module.exports.submitHandler = (event, context, callback) => {
             let markdown = body.markdown;
             let auth = body.captchaResponse;
             let ip = event["requestContext"]["identity"]["sourceIp"];
+            let threshold = 4096;
+            let payloadSize = Buffer.byteLength(markdown, 'utf-8');
+            if (payloadSize > threshold) {
+                // This is larger than most payloads will ever be because the UI has a 4096 character limit in the text area.
+                helpers.handleError({error: `Payload too large. It must be <= ${threshold} bytes AFTER gzip compression.`}, response, callback, 413);
+            }
+
             helpers.verifyCaptcha(auth, ip, secret).then((resp) => {
                 console.log(resp);
                 if (!resp.data.success) {

@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {withRouter} from 'react-router-dom';
+import {Redirect, withRouter} from 'react-router-dom';
 import Remarkable from 'remarkable';
 import RemarkableReactRenderer from 'remarkable-react';
 const zlib = require('zlib');
@@ -22,7 +22,7 @@ export class MarkdownViewer extends Component {
 class Viewer extends Component {
     constructor(props) {
         super(props);
-        this.state = {markdown: 'loading...'};
+        this.state = {markdown: 'loading...', error: false};
     }
 
     componentDidMount() {
@@ -42,6 +42,8 @@ class Viewer extends Component {
         }).catch(err => {
             if (err.response.status === 404) {
                 self.setState({markdown: "This page no longer exists."});
+            } else if(err.response.status === 400) {
+                self.setState({error: true});
             } else {
                 let markdown = "## ERROR\n\n```" + JSON.stringify(err) + "```\n";
                 self.setState({markdown: markdown});
@@ -50,7 +52,7 @@ class Viewer extends Component {
     }
 
     render () {
-        return (
+        return this.state.error ? (<Redirect to={{pathname: '/wat'}}/>) : (
             <div>
                 <MarkdownViewer markdown={this.state.markdown}/>
             </div>

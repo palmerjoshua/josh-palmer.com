@@ -41,10 +41,22 @@ const testHost = (hostToTest) => {
     return hostToTest.toLowerCase() === allowedDomain.toLowerCase();
 };
 
+const testPostIdPattern = (postId) => {
+    let pat = /^([a-z0-9]{20,40})$/;
+    let match;
+    try {
+        match = pat.exec(postId)[1];
+    } catch (e) {
+        match = "";
+    }
+    return match === postId;
+};
+
 module.exports = {
     generatePostId,
     handleError,
     verifyCaptcha,
     getDefaultResponse,
-    testHost
+    testHost,
+    testPostIdPattern
 };

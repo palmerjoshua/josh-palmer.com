@@ -1,6 +1,6 @@
 ### Overview
-This is a ReactJS app. The result of building this project is a single page, static web application. The instructions in
-this readme are for building the "front end" of the website only. All "backend" instructions are found in [the server readme](../server/README.md).
+This is a ReactJS app. The result of building this project is a single page, static web application. To build
+the backend API, read [the server readme](../server/README.md).
 
 ### Configuration
 * config.js should have the correct URLs for the REST API. See the example file for details.
