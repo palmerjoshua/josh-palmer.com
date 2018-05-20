@@ -42,12 +42,13 @@ const testHost = (hostToTest) => {
 };
 
 const testPostIdPattern = (postId) => {
-    let pat = /^([a-z0-9]{20,40})$/;
+    let pat = /^([a-f0-9]{40})$/;
     let match;
+    let toTest = postId || "";
     try {
-        match = pat.exec(postId)[1];
+        match = pat.exec(toTest)[1];
     } catch (e) {
-        match = "";
+        return false;
     }
     return match === postId;
 };
