@@ -81,7 +81,7 @@ functions:
     handler: server/handlers.flushHandler
     role: FlushRole
     events:
-      - schedule: ${self:custom.cleanup_schedule}
+      - schedule: cron(${self:custom.cleanup_schedule})
 
 resources:
   Resources:
