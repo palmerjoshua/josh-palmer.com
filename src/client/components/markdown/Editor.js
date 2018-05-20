@@ -4,6 +4,7 @@ import CaptchaButton from "../common/CaptchaButton";
 const zlib = require('zlib');
 const axios = require('axios');
 const config = require('../../../../config');
+// region initText
 const initialText = `# Markdown Editor
 
 ### Create markdown and share it with others 
@@ -30,13 +31,13 @@ const initialText = `# Markdown Editor
     * Use scripts, bots, or any other methods to submit content that don't involve human interaction with this web page in a web browser.
 `;
 
+// endregion
+
 class TextEditor extends Component {
 
     render() {
         let maxlen = this.props.maxLength ? this.props.maxLength : 4096;
         return (<textarea maxLength={maxlen}
-                          rows={this.props.rows}
-                          cols={this.props.cols}
                           className="MarkdownEditor"
                           defaultValue={this.props.defaultValue}
                           onChange={this.props.onMarkdownChange}/>);
@@ -46,8 +47,8 @@ class TextEditor extends Component {
 class MarkDownSubmitter extends Component {
     render() {
         return (
-            <div className="markdownSubmitter">
-                <TextEditor id="mainMarkdownEditor" rows={40} cols={40} defaultValue={this.props.defaultValue} onMarkdownChange={this.props.onMarkdownEnter}/>
+            <div className="MarkdownSubmitter">
+                <TextEditor id="mainMarkdownEditor" defaultValue={this.props.defaultValue} onMarkdownChange={this.props.onMarkdownEnter}/>
                 <CaptchaButton buttonText="Submit" onClick={this.props.submitMarkdown} disableWhen={this.props.disableWhen}/>
             </div>
         );

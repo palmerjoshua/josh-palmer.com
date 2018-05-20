@@ -15,6 +15,9 @@ body {
 
 textarea {
     color: white;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
 }
 
 .navItem {
@@ -75,6 +78,13 @@ textarea, .MarkdownViewer, .sideBar, #Welcome, .ResumeField, #markdownUrlViewer 
     text-align: center;
 }
 
+
+/*.MarkdownSubmitter {*/
+    /*display: flex;*/
+    /*flex-flow: column;*/
+/*}*/
+
+
 @media (min-width: 740px) {
 
     body {
@@ -102,10 +112,23 @@ textarea, .MarkdownViewer, .sideBar, #Welcome, .ResumeField, #markdownUrlViewer 
         margin-left: 8px;
     }
 
+    .MarkdownSubmitter {
+        order: 1;
+    }
+
+    .MarkdownSubmitter, .MarkdownViewer {
+        flex-grow: 1;
+        width: 50%;
+    }
+
+    .MarkdownEditor {
+        height: 50%;
+        max-width: 100%;
+        width: 100%;
+    }
+
     .MarkdownViewer {
         order: 2;
-        width: 50%;
-        height: 100%;
         margin-left: 8px;
     }
 
@@ -123,18 +146,29 @@ textarea, .MarkdownViewer, .sideBar, #Welcome, .ResumeField, #markdownUrlViewer 
         flex-flow: column nowrap;
     }
 
-    #Welcome, .sideBar {
+    #Welcome, .sideBar, .MarkdownSubmitter, .MarkdownViewer {
         width: 100%;
     }
 
-    .sideBar, .MarkdownEditor {
+    .sideBar, .MarkdownSubmitter {
         order: 1;
+    }
+
+
+    .MarkdownSubmitter {
+        height: 18em;
+    }
+
+    .MarkdownEditor {
+        flex-grow: 2;
+        max-width: 100%;
+        min-width: 100%;
+        width: 100%;
+        min-height: 60%;
     }
 
     #mainContent, .MarkdownViewer {
         order: 2;
-        width: 100%;
-        height: 50%;
         margin-top: 8px;
     }
 }
