@@ -36,7 +36,7 @@ const getMarkdownParams = id => {
 
 const getCleanupScanParams = (cleanupThreshold = 0) => {
     if (!cleanupThreshold) {
-        cleanupThreshold = new Date(new Date().getTime() - (24 * 60 * 60 * 1000)).getTime(); // 24 hours
+        cleanupThreshold = new Date(new Date().getTime() - ( 30 * 24 * 60 * 60 * 1000)).getTime(); // 30 days
     }
     return {
         TableName: TABLE_NAME,
