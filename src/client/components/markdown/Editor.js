@@ -28,6 +28,42 @@ const initialText = `
 
 
 
+class RecaptchaButton extends Component {
+    render() {
+        return (
+            <span>
+                <ReCAPTCHA ref="recaptcha"
+                           theme="dark"
+                           sitekey={SITE_KEY}
+                           onChange={this.props.captchaOnChange}/>
+                <button type="button"
+                        style={this.props.buttonStyle}
+                        onClick={this.props.buttonOnClick}
+                        disabled={this.props.buttonDisabled || false}>{this.props.buttonText}</button>
+            </span>
+        );
+    }
+}
+
+
+class EditorView extends Component {
+    render() {
+        return (
+            <div id="editorViewerPane" style={{display: 'flex', minHeight: '100%'}}>
+
+                {this.props.mode === 'edit' &&
+                <textarea placeholder={this.props.textPlaceHolder} id="mainMarkdownEditor" style={{order: '1'}}
+                          value={this.props.textValue}
+                          onChange={this.props.textOnChange}/>}
+
+                {this.props.showViewer() &&
+                <MarkdownViewer markdown={this.props.textValue}/>}
+            </div>
+        );
+    }
+}
+
+
 export default class Editor extends Component {
 
     constructor(props) {
@@ -46,11 +82,16 @@ export default class Editor extends Component {
         this.enterText = this.enterText.bind(this);
         this.submitMarkdown = this.submitMarkdown.bind(this);
         this.displayUrl = this.displayUrl.bind(this);
+        this.editorIsEmpty = this.editorIsEmpty.bind(this);
+    }
+
+    static isFirstToggle(text, mode) {
+        return mode === 'edit' && text === initialText;
     }
 
     toggleMode() {
         let toSet = {mode: this.state.mode === 'edit' ? 'preview' : 'edit'};
-        if (toSet.mode === 'edit' && this.state.text === initialText) {
+        if (Editor.isFirstToggle(this.state.text, toSet.mode)) {
             toSet.text = '';
         }
         this.setState(toSet);
@@ -58,7 +99,7 @@ export default class Editor extends Component {
 
     toggleDual(e) {
         let toSet = {mode: 'edit', dual: !this.state.dual};
-        if (toSet.mode === 'edit' && this.state.text === initialText) {
+        if (Editor.isFirstToggle(this.state.text, toSet.mode)) {
             toSet.text = '';
         }
         this.setState(toSet);
@@ -74,6 +115,10 @@ export default class Editor extends Component {
 
     static generateUrl(id) {
         return `${window.location.href}/${id}`;
+    }
+
+    editorIsEmpty() {
+        return [undefined, null, ""].indexOf(this.state.text) !== -1
     }
 
     submitMarkdown () {
@@ -108,7 +153,7 @@ export default class Editor extends Component {
 
     enterText(e) {
         if (this.state.captchaResponse) {
-            this.setState({text: e.target.value, captchaResponse: null})
+            this.setState({text: e.target.value, captchaResponse: null});
         } else {
             this.setState({text: e.target.value});
         }
@@ -116,29 +161,28 @@ export default class Editor extends Component {
 
     render() {
         return this.state.url ? (
-            <div><MarkdownViewer markdown={this.displayUrl()}/><button type="button" onClick={e=> {this.setState({url: null})}}>back</button></div>
+            <div>
+                <MarkdownViewer markdown={this.displayUrl()}/>
+                <button type="button" onClick={e=> {this.setState({url: null})}}>back</button>
+            </div>
         ) : (
             <div style={{width: '100%', height: '100%'}}>
-                <div id="editorViewerPane" style={{display: 'flex', minHeight: '100%'}}>
-                    {this.state.mode === 'edit' &&
-                    <textarea placeholder="Type your message here!" id="mainMarkdownEditor" style={{order: '1'}}
-                              value={this.state.text}
-                              onChange={this.enterText}/>}
-                    {this.showViewer() &&
-                    <MarkdownViewer markdown={this.state.text}/>}
-                </div>
+                <EditorView mode={this.state.mode}
+                            textValue={this.state.text}
+                            textOnChange={this.enterText}
+                            textPlaceHolder={"Type your message here!"}
+                            showViewer={this.showViewer}/>
+
                 <div style={{display: 'flex', flexDirection: 'column'}}>
                     <div style={{display: 'flex', flexDirection: 'row', marginBottom: 2}}>
-                        <button type="button" onClick={this.toggleMode}>{this.buttonText()}</button>
+                        <button type="button" style={{width: '8em'}} onClick={this.toggleMode}>{this.buttonText()}</button>
                         <label id="dualController" title="Preview as you type" htmlFor="dualcheck" style={{marginLeft: 2}}>Live Preview: <input name="dualcheck" type="checkbox" checked={this.state.dual} onChange={this.toggleDual}/></label>
                     </div>
-                    <span>
-                        <ReCAPTCHA ref="recaptcha"
-                                   theme="dark"
-                                   sitekey={SITE_KEY}
-                                   onChange={resp => {this.setState({captchaResponse: resp})}}/>
-                        <button type="button" onClick={this.submitMarkdown}>Submit</button>
-                    </span>
+                    <RecaptchaButton captchaOnChange={resp => {this.setState({captchaResponse: resp})}}
+                                     buttonOnClick={this.submitMarkdown}
+                                     buttonStyle={{width: '8em'}}
+                                     buttonText={"Submit"} buttonDisabled={this.editorIsEmpty() || this.state.text === initialText}
+                    />
                 </div>
             </div>
         );
