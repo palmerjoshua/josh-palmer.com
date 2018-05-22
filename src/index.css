@@ -79,12 +79,6 @@ textarea, .MarkdownViewer, .sideBar, #Welcome, .ResumeField, #markdownUrlViewer 
 }
 
 
-/*.MarkdownSubmitter {*/
-    /*display: flex;*/
-    /*flex-flow: column;*/
-/*}*/
-
-
 @media (min-width: 740px) {
 
     body {
@@ -112,28 +106,19 @@ textarea, .MarkdownViewer, .sideBar, #Welcome, .ResumeField, #markdownUrlViewer 
         margin-left: 8px;
     }
 
-    .MarkdownSubmitter {
-        order: 1;
-    }
-
-    .MarkdownSubmitter, .MarkdownViewer {
-        flex-grow: 1;
+    #mainMarkdownEditor {
+        min-width: 20%;
         width: 50%;
-    }
-
-    .MarkdownEditor {
-        height: 50%;
-        max-width: 100%;
-        width: 100%;
+        max-width: 60%;
     }
 
     .MarkdownViewer {
+        flex-grow: 1;
+        width: 50%;
         order: 2;
-        margin-left: 8px;
     }
-
-
 }
+
 @media (max-width: 739px) {
 
     body {
@@ -146,29 +131,28 @@ textarea, .MarkdownViewer, .sideBar, #Welcome, .ResumeField, #markdownUrlViewer 
         flex-flow: column nowrap;
     }
 
-    #Welcome, .sideBar, .MarkdownSubmitter, .MarkdownViewer {
+    #Welcome, .sideBar, .MarkdownViewer {
         width: 100%;
     }
 
-    .sideBar, .MarkdownSubmitter {
+    .sideBar {
         order: 1;
-    }
-
-
-    .MarkdownSubmitter {
-        height: 18em;
-    }
-
-    .MarkdownEditor {
-        flex-grow: 2;
-        max-width: 100%;
-        min-width: 100%;
-        width: 100%;
-        min-height: 60%;
     }
 
     #mainContent, .MarkdownViewer {
         order: 2;
         margin-top: 8px;
+    }
+
+    #editorViewerPane {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    #mainMarkdownEditor, .MarkdownViewer {
+        width: 100%;
+        max-width: 100%;
+        min-width: 100%;
+        min-height: 50%;
     }
 }

@@ -1,91 +1,87 @@
 import React, {Component} from 'react';
-import {MarkdownViewer} from "./Viewer";
-import CaptchaButton from "../common/CaptchaButton";
+import ReCAPTCHA from 'react-google-recaptcha/lib/recaptcha-wrapper';
 const zlib = require('zlib');
 const axios = require('axios');
-const config = require('../../../../config');
-// region initText
-const initialText = `# Markdown Editor
+import {MarkdownViewer} from "./Viewer";
 
-### Create markdown and share it with others 
+
+const config = require('../../../../config');
+const SITE_KEY = config.google.recaptcha.site_key;
+
+const initialText = `
+# Secret Messenger
+### Create and share self-destructing messages
+---
+## Directions
+1. Click "Edit."
+2. Enter text.
+3. Prove you're not a robot.
+4. Click "Submit."
 ---
 ## How it Works
-* Write your markdown (up to 4096 characters) in this text editor, and submit it.
-* Copy the shareable URL once it appears on the screen.
-* After the URL is visited **once**, the markdown is deleted permanently.
-* Unused markdown is cleaned up every day at 00:00:00 UTC-4:00 (midnight EDT).
-* By using this service, you agree to the terms below.
----
-## Terms of Service
-* I assume no responsibility for the content you submit. 
-* This is purely experimental. If you need reliable data storage, use another service.
-* I will not:
-    * Read your content (I do have access, so don't submit what you don't trust me with).
-    * Save your content for more or less time than what's specified in this document.
-    * Keep logs about any user except for spammers, bots, attackers, and those who break the content policy.
-* You will not:
-    * Bypass or forge the captcha.
-    * Submit more data than this text area is configured to hold.
-    * Make an excessive number of submissions. I reserve the right to define what is excessive.
-    * Contact any of my backend services except through the user interfaces provided on josh-palmer.com.
-    * Use scripts, bots, or any other methods to submit content that don't involve human interaction with this web page in a web browser.
+* After you submit, a unique URL is generated.
+* Follow this URL to view your message at a later time.
+* After one view, your message is gone forever.
+* Unread messages are deleted automatically after 30 days.
+* If you're feeling fancy, this text editor supports [markdown syntax](https://www.markdownguide.org/cheat-sheet)!
 `;
 
-// endregion
 
-class TextEditor extends Component {
 
-    render() {
-        let maxlen = this.props.maxLength ? this.props.maxLength : 4096;
-        return (<textarea maxLength={maxlen}
-                          className="MarkdownEditor"
-                          defaultValue={this.props.defaultValue}
-                          onChange={this.props.onMarkdownChange}/>);
-    }
-}
+export default class Editor extends Component {
 
-class MarkDownSubmitter extends Component {
-    render() {
-        return (
-            <div className="MarkdownSubmitter">
-                <TextEditor id="mainMarkdownEditor" defaultValue={this.props.defaultValue} onMarkdownChange={this.props.onMarkdownEnter}/>
-                <CaptchaButton buttonText="Submit" onClick={this.props.submitMarkdown} disableWhen={this.props.disableWhen}/>
-            </div>
-        );
-    }
-}
-
-class Editor extends Component {
     constructor(props) {
         super(props);
-        this.setMarkdownToState = this.setMarkdownToState.bind(this);
-        this.setMarkdown = this.setMarkdown.bind(this);
+        this.state = {
+            text: initialText,
+            mode: 'preview', // or 'edit'
+            dual: false,
+            captchaResponse: null,
+            url: null
+        };
+        this.toggleMode = this.toggleMode.bind(this);
+        this.toggleDual = this.toggleDual.bind(this);
+        this.buttonText = this.buttonText.bind(this);
+        this.showViewer = this.showViewer.bind(this);
+        this.enterText = this.enterText.bind(this);
         this.submitMarkdown = this.submitMarkdown.bind(this);
-        this.clearMarkdown = this.clearMarkdown.bind(this);
-        this.state = {markdown: initialText, url: null};
+        this.displayUrl = this.displayUrl.bind(this);
+    }
+
+    toggleMode() {
+        let toSet = {mode: this.state.mode === 'edit' ? 'preview' : 'edit'};
+        if (toSet.mode === 'edit' && this.state.text === initialText) {
+            toSet.text = '';
+        }
+        this.setState(toSet);
+    }
+
+    toggleDual(e) {
+        let toSet = {mode: 'edit', dual: !this.state.dual};
+        if (toSet.mode === 'edit' && this.state.text === initialText) {
+            toSet.text = '';
+        }
+        this.setState(toSet);
+    }
+
+    buttonText() {
+        return this.state.mode === 'edit' ? 'Preview' : 'Edit';
+    }
+
+    showViewer() {
+        return this.state.mode === 'preview' || this.state.dual;
     }
 
     static generateUrl(id) {
         return `${window.location.href}/${id}`;
     }
 
-    setMarkdown(text) {
-        if(text !== null) {
-            this.setState({markdown: text});
-        }
-    }
-
-    setMarkdownToState (event) {
-        let text = event.target.value || "";
-        this.setMarkdown(text);
-    }
-
-    submitMarkdown (captchaResponse) {
+    submitMarkdown () {
         let self = this;
-        zlib.deflate(this.state.markdown, (err, buffer) => {
+        zlib.deflate(this.state.text, (err, buffer) => {
             if(!err) {
                 let compressed = buffer.toString('base64');
-                let body = {markdown: compressed, captchaResponse};
+                let body = {markdown: compressed, captchaResponse: this.state.captchaResponse};
                 let url = config.aws.submitUrl;
                 axios({method: 'post', url: url, data: body}).then(resp => {
                     let purl = Editor.generateUrl(resp.data.postId);
@@ -94,37 +90,57 @@ class Editor extends Component {
                     self.setState({url: null});
                 });
             } else {
-                self.setState({markdown: 'ERROR', url: null});
+                self.setState({text: 'ERROR', url: null});
             }
         });
     }
 
-    clearMarkdown(e) {
-        e.preventDefault();
-        this.setMarkdown("");
-        document.getElementById('mainMarkdownEditor').innerText = "";
+    displayUrl() {
+        let markdown = `
+## WARNING:
+* Your content will be deleted permanently after one use, or after 30 days (whichever comes first).
+---
+## Your URL: 
+* ${this.state.url}
+`;
+        return markdown;
+    }
+
+    enterText(e) {
+        if (this.state.captchaResponse) {
+            this.setState({text: e.target.value, captchaResponse: null})
+        } else {
+            this.setState({text: e.target.value});
+        }
     }
 
     render() {
         return this.state.url ? (
-            <div id="markdownUrlViewer">
-                <p>WARNING: This URL expires after ONE use.</p>
-                <br/>
-                <p>{this.state.url}</p>
-                <button onClick={e => {this.setState({url: null})}}>back</button>
-            </div>
+            <div><MarkdownViewer markdown={this.displayUrl()}/><button type="button" onClick={e=> {this.setState({url: null})}}>back</button></div>
         ) : (
-            <div className="MarkdownArea" id="mainEditor">
-                <MarkDownSubmitter onMarkdownEnter={this.setMarkdownToState}
-                                   defaultValue={this.state.markdown}
-                                   submitMarkdown={this.submitMarkdown}
-                                   clearEditor={this.clearMarkdown}
-                                   disableWhen={this.state.markdown === initialText}
-                />
-                <MarkdownViewer id="mainMarkdownViewer" markdown={this.state.markdown}/>
+            <div style={{width: '100%', height: '100%'}}>
+                <div id="editorViewerPane" style={{display: 'flex', minHeight: '100%'}}>
+                    {this.state.mode === 'edit' &&
+                    <textarea placeholder="Type your message here!" id="mainMarkdownEditor" style={{order: '1'}}
+                              value={this.state.text}
+                              onChange={this.enterText}/>}
+                    {this.showViewer() &&
+                    <MarkdownViewer markdown={this.state.text}/>}
+                </div>
+                <div style={{display: 'flex', flexDirection: 'column'}}>
+                    <div style={{display: 'flex', flexDirection: 'row', marginBottom: 2}}>
+                        <button type="button" onClick={this.toggleMode}>{this.buttonText()}</button>
+                        <label id="dualController" title="Preview as you type" htmlFor="dualcheck" style={{marginLeft: 2}}>Live Preview: <input name="dualcheck" type="checkbox" checked={this.state.dual} onChange={this.toggleDual}/></label>
+                    </div>
+                    <span>
+                        <ReCAPTCHA ref="recaptcha"
+                                   theme="dark"
+                                   sitekey={SITE_KEY}
+                                   onChange={resp => {this.setState({captchaResponse: resp})}}/>
+                        <button type="button" onClick={this.submitMarkdown}>Submit</button>
+                    </span>
+                </div>
             </div>
         );
     }
 }
-
-export default Editor;
