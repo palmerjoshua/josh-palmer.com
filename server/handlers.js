@@ -100,24 +100,3 @@ module.exports.submitHandler = (event, context, callback) => {
     }
 };
 
-module.exports.flushHandler = (event, context, callback) => {
-    console.log("Table cleanup started at: ", Date.now());
-    database.getMarkdownToDelete((err, data) => {
-        if (err) {
-            console.log("Error cleaning up table");
-            console.log(err);
-            callback(err, null);
-        } else {
-            console.log(`Deleting ${data.Items.length} items`);
-            database.deleteMarkdown(data.Items.map(item => item.id), (err) => {
-                if (err) {
-                    console.log("Error cleaning up table");
-                    console.log(err);
-                    callback(err, null);
-                } else {
-                    callback(null, {message: 'cleanup complete'});
-                }
-            });
-        }
-    });
-};

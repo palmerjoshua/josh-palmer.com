@@ -18,7 +18,7 @@ const putMarkdown = (id, markdown, callback) => {
         TableName: TABLE_NAME,
         Item: {
             "id": id,
-            "created_time": Date.now(),
+            "ttl": Math.floor(Date.now() / 1e3) + 2592000, // 30 days from now
             "markdown": markdown
         }
     };
@@ -34,17 +34,6 @@ const getMarkdownParams = id => {
     };
 };
 
-const getCleanupScanParams = (cleanupThreshold = 0) => {
-    if (!cleanupThreshold) {
-        cleanupThreshold = new Date(new Date().getTime() - ( 30 * 24 * 60 * 60 * 1000)).getTime(); // 30 days
-    }
-    return {
-        TableName: TABLE_NAME,
-        FilterExpression: "created_time < :threshold",
-        ExpressionAttributeValues: {":threshold": cleanupThreshold}
-    };
-};
-
 const getDeleteParams = postIds => {
     let deleteRequests = postIds.map(id => ({DeleteRequest: {Key: {id}}}));
     return {RequestItems: {[TABLE_NAME]: deleteRequests}};
@@ -54,12 +43,8 @@ const getMarkdown = (id, callback) => {
     return documentClient.get(getMarkdownParams(id), callback);
 };
 
-const getMarkdownToDelete = callback => {
-    return documentClient.scan(getCleanupScanParams(), callback);
-};
-
 const deleteMarkdown = (postIds, callback) => {
     documentClient.batchWrite(getDeleteParams(postIds), callback)
 };
 
-module.exports = {putMarkdown, getMarkdown, getMarkdownToDelete, deleteMarkdown};
+module.exports = {putMarkdown, getMarkdown, deleteMarkdown};
