@@ -13,7 +13,7 @@ md.renderer = new RemarkableReactRenderer();
 export class MarkdownViewer extends Component {
     render() {
         let hasMarkdown = ![null, undefined, ''].some(e => e === this.props.markdown);
-        let markdown = hasMarkdown ? md.render(this.props.markdown) : null;
+        let markdown = hasMarkdown ? md.render(this.props.markdown.trim()) : null;
         return <div className="MarkdownViewer">{hasMarkdown && markdown}</div>;
     }
 }

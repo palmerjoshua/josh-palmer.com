@@ -1,10 +1,10 @@
 import React, {Component} from 'react';
 import ReCAPTCHA from 'react-google-recaptcha/lib/recaptcha-wrapper';
+import Textarea from 'react-textarea-autosize';
+import MediaQuery from 'react-responsive';
 const zlib = require('zlib');
 const axios = require('axios');
 import {MarkdownViewer} from "./Viewer";
-
-
 const config = require('../../../../config');
 const SITE_KEY = config.google.recaptcha.site_key;
 
@@ -27,6 +27,24 @@ const initialText = `
 `;
 
 
+class ResponsiveTextarea extends Component {
+    render() {
+        return (
+            <MediaQuery maxWidth={739}>
+                {matches => {
+                    let style = matches ?
+                        {order: '1', minHeight: '10em', minWidth: '100%', maxWidth: '100%', height: '10em'} :
+                        {order: '1', minHeight: '20em', minWidth: '20%', maxWidth: '60%', width: '50%', height: '100%'};
+                    return <Textarea style={style}
+                                     placeholder={this.props.textPlaceHolder}
+                                     id="mainMarkdownEditor"
+                                     value={this.props.textValue}
+                                     onChange={this.props.textOnChange}/>;
+                }}
+            </MediaQuery>
+        );
+    }
+}
 
 class RecaptchaButton extends Component {
     render() {
@@ -50,11 +68,10 @@ class EditorView extends Component {
     render() {
         return (
             <div id="editorViewerPane" style={{display: 'flex', minHeight: '100%'}}>
-
                 {this.props.mode === 'edit' &&
-                <textarea placeholder={this.props.textPlaceHolder} id="mainMarkdownEditor" style={{order: '1'}}
-                          value={this.props.textValue}
-                          onChange={this.props.textOnChange}/>}
+                <ResponsiveTextarea textPlaceHolder={this.props.textPlaceHolder}
+                                    textValue={this.props.textValue}
+                                    textOnChange={this.props.textOnChange}/>}
 
                 {this.props.showViewer() &&
                 <MarkdownViewer markdown={this.props.textValue}/>}
