@@ -1,12 +1,12 @@
 import React, {Component} from 'react';
-import ReCAPTCHA from 'react-google-recaptcha/lib/recaptcha-wrapper';
 import Textarea from 'react-textarea-autosize';
 import MediaQuery from 'react-responsive';
 const zlib = require('zlib');
 const axios = require('axios');
 import {MarkdownViewer} from "./Viewer";
+import RecaptchaButton from '../common/CaptchaButton';
 const config = require('../../../../config');
-const SITE_KEY = config.google.recaptcha.site_key;
+
 
 const initialText = `
 # Secret Messenger
@@ -42,23 +42,6 @@ class ResponsiveTextarea extends Component {
                                      onChange={this.props.textOnChange}/>;
                 }}
             </MediaQuery>
-        );
-    }
-}
-
-class RecaptchaButton extends Component {
-    render() {
-        return (
-            <span>
-                <ReCAPTCHA ref="recaptcha"
-                           theme="dark"
-                           sitekey={SITE_KEY}
-                           onChange={this.props.captchaOnChange}/>
-                <button type="button"
-                        style={this.props.buttonStyle}
-                        onClick={this.props.buttonOnClick}
-                        disabled={this.props.buttonDisabled || false}>{this.props.buttonText}</button>
-            </span>
         );
     }
 }

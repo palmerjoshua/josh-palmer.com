@@ -153,3 +153,11 @@ resources:
                         - dynamodb:GetItem
                         - dynamodb:BatchWriteItem
                       Resource: ${self:custom.tableresource}
+              - PolicyName: GetSecretPolicy-${self:custom.stage}
+                PolicyDocument:
+                  Version: ${self:custom.policyversion}
+                  Statement:
+                    - Effect: Allow
+                      Action:
+                        - ssm:GetParameters
+                      Resource: ${self:custom.secretresource}

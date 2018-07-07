@@ -3,39 +3,19 @@ import ReCAPTCHA from 'react-google-recaptcha/lib/recaptcha-wrapper';
 const config = require('../../../../config');
 const SITE_KEY = config.google.recaptcha.site_key;
 
-class CaptchaButton extends Component {
-
-    constructor(props) {
-        super(props);
-        this.resetCaptchaButton = this.resetCaptchaButton.bind(this);
-        this.onClick = this.onClick.bind(this);
-        this.state = {recaptchaResponse: null};
-    }
-
-    onClick (e) {
-        e.preventDefault();
-        this.props.onClick(this.state.recaptchaResponse);
-        this.resetCaptchaButton();
-    }
-
-    resetCaptchaButton () {
-        this.setState({recaptchaResponse: null});
-        window.grecaptcha.reset();
-    }
-
+export default class RecaptchaButton extends Component {
     render() {
         return (
-            <div className="captchaButton">
+            <span>
                 <ReCAPTCHA ref="recaptcha"
                            theme="dark"
                            sitekey={SITE_KEY}
-                           onChange={resp => this.setState({recaptchaResponse: resp})}/>
+                           onChange={this.props.captchaOnChange}/>
                 <button type="button"
-                        disabled={!this.state.recaptchaResponse || this.props.disableWhen}
-                        onClick={this.onClick}>{this.props.buttonText}</button>
-            </div>
+                        style={this.props.buttonStyle}
+                        onClick={this.props.buttonOnClick}
+                        disabled={this.props.buttonDisabled || false}>{this.props.buttonText}</button>
+            </span>
         );
     }
 }
-
-export default CaptchaButton;
