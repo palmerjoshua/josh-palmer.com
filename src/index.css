@@ -2,13 +2,8 @@ html, body, #root {
     height: 100%;
 }
 
-@font-face {
-    font-family: gentium;
-    src: url("../assets/GentiumPlus-R-designsource.otf");
-}
-
 body {
-    font-family: gentium;
+    font-family: sans-serif;
     color: white;
 
     -webkit-background-size: cover;
