@@ -15,6 +15,9 @@ body {
 
 textarea {
     color: white;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
 }
 
 .navItem {
@@ -37,7 +40,7 @@ textarea {
     color: black;
 }
 
-textarea, .MarkdownViewer, .sideBar, #Welcome, .ResumeField {
+textarea, .MarkdownViewer, .sideBar, #Welcome, .ResumeField, #markdownUrlViewer {
     background-color: rgba(0,0,0,0.9);
     border: rgba(255,255,255,0.6) 1px solid;
 }
@@ -75,13 +78,14 @@ textarea, .MarkdownViewer, .sideBar, #Welcome, .ResumeField {
     text-align: center;
 }
 
+
 @media (min-width: 740px) {
 
     body {
         background: url('../assets/background.jpg') no-repeat center center fixed;
     }
 
-    #App, .Editor {
+    #App, .MarkdownArea {
         display: flex;
         align-items: stretch;
         flex-flow: row nowrap;
@@ -102,49 +106,47 @@ textarea, .MarkdownViewer, .sideBar, #Welcome, .ResumeField {
         margin-left: 8px;
     }
 
-    .MarkdownEditor {
-        order: 1;
-        width: 30%;
-        min-height: 100%;
-    }
-
     .MarkdownViewer {
-        order: 2;
+
         width: 50%;
-        height: 100%;
-        margin-left: 8px;
+        order: 2;
     }
-
-
 }
+
 @media (max-width: 739px) {
 
     body {
         background-color: #B0B0B0;
     }
 
-    #App, .Editor {
+    #App, .MarkdownArea {
         display: flex;
         align-items: stretch;
         flex-flow: column nowrap;
     }
 
-    #Welcome {
+    #Welcome, .sideBar, .MarkdownViewer {
         width: 100%;
     }
 
-    .sideBar, .MarkdownEditor {
+    .sideBar {
         order: 1;
-        width: 100%;
-    }
-    .markdownEditor {
-        min-height: 100%;
     }
 
     #mainContent, .MarkdownViewer {
         order: 2;
-        width: 100%;
-        height: 50%;
         margin-top: 8px;
+    }
+
+    #editorViewerPane {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .MarkdownViewer {
+        width: 100%;
+        max-width: 100%;
+        min-width: 100%;
+        min-height: 20%;
     }
 }

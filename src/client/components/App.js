@@ -25,7 +25,7 @@ export default class App extends Component {
             <div  id="App">
                 <SideBar/>
                 <MainContent/>
-                <Footer id="mainFooter" footerStyle={{order: 3, position: 'fixed', bottom: 0, right: 0, left: 8}}>
+                <Footer id="mainFooter" footerStyle={{zIndex: -1, order: 3, position: 'fixed', bottom: 0, right: 0, left: 8}}>
                     <span>Copyright &#169; 2018 Joshua Palmer</span>
                 </Footer>
             </div>

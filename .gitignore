@@ -10,18 +10,16 @@
 /build
 
 # misc
-.DS_Store
 .env
 npm-debug.log*
 yarn-debug.log*
-yarn-error.log*
-/.idea
-# readme that comes with create-react-app
-CRA-readme.md
 
-/assets/wat.jpg
+/.idea
+CRA-readme.md
 /src/client/components/resume/data/*.js
 config.js
+secret.js
+serverlessconfig.yml
 !*.example.js
-/assets/*.jpg
-/assets/*.pdf
+.serverless/
+.serverless-secrets.json
