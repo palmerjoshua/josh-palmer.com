@@ -2,60 +2,15 @@ const helpers = require('./helpers');
 const database = require('./database');
 const secretsPromise = require('serverless-secrets/client').load();
 
-module.exports.fetchHandler = (event, context, callback) => {
-    let response = helpers.getDefaultResponse();
-    try {
-        let body = JSON.parse(event.body);
-        let postId = body.postId;
-        if(!helpers.testPostIdPattern(postId)) {
-            return helpers.handleError({error: "Bad request"}, response, callback, 400);
-        }
-        database.getMarkdown(postId, (err, data) => {
-            if (err) {
-                console.log("ERROR GETTING MARKDOWN FROM TABLE");
-                helpers.handleError(err, response, callback);
-            } else {
-                console.log(data.Item);
-                let payload = data.Item;
-                if (data.Item === undefined) {
-                    helpers.handleError({error: "Not Found"}, response, callback, 404)
-                } else {
-                    let postId = payload.id;
-                    let ids = [];
-                    ids.push(postId);
-                    database.deleteMarkdown(ids, err => {
-                        if (err) {
-                            console.log("ERROR DELETING MARKDOWN FROM TABLE");
-                            helpers.handleError(err, response, callback);
-                        } else {
-                            response.body = JSON.stringify(payload);
-                            callback(null, response);
-                        }
-                    });
-                }
 
-            }
-        });
-    } catch (e) {
-        helpers.handleError(e, response, callback);
-    }
-};
-
-module.exports.submitHandler = (event, context, callback) => {
+const authenticatedHandler = (event, context, callback, successFn, ...args) => {
     let response = helpers.getDefaultResponse();
     try {
         secretsPromise.then(() => {
             let secret = process.env.CAPTCHA_SECRET_KEY;
             let body = JSON.parse(event.body);
-            let markdown = body.markdown;
             let auth = body.captchaResponse;
             let ip = event["requestContext"]["identity"]["sourceIp"];
-            let threshold = 4096;
-            let payloadSize = Buffer.byteLength(markdown, 'utf-8');
-            if (payloadSize > threshold) {
-                // This is larger than most payloads will ever be because the UI has a 4096 character limit in the text area.
-                helpers.handleError({error: `Payload too large. It must be <= ${threshold} bytes AFTER gzip compression.`}, response, callback, 413);
-            }
 
             helpers.verifyCaptcha(auth, ip, secret).then((resp) => {
                 console.log(resp);
@@ -70,15 +25,7 @@ module.exports.submitHandler = (event, context, callback) => {
                     helpers.handleError("Unauthenticated", response, callback, 401)
 
                 } else {
-                    let id = helpers.generatePostId();
-                    database.putMarkdown(id, markdown, err => {
-                        if (err) {
-                            helpers.handleError(err, response, callback);
-                        } else {
-                            response.body = JSON.stringify({postId: id});
-                            callback(null, response);
-                        }
-                    });
+                    successFn(...args);
                 }
 
             }).catch(err => {
@@ -96,6 +43,72 @@ module.exports.submitHandler = (event, context, callback) => {
     } catch (e) {
         console.log("UNKNOWN EXCEPTION");
         console.log(e);
+        helpers.handleError(e, response, callback);
+    }
+};
+
+module.exports.fetchHandler = (event, context, callback) => {
+    authenticatedHandler(event, context, callback, () => {
+        let response = helpers.getDefaultResponse();
+        try {
+            let body = JSON.parse(event.body);
+            let postId = body.postId;
+            if(!helpers.testPostIdPattern(postId)) {
+                helpers.handleError({error: "Bad request"}, response, callback, 400);
+            }
+            database.getMarkdown(postId, (err, data) => {
+                if (err) {
+                    console.log("ERROR GETTING MARKDOWN FROM TABLE");
+                    helpers.handleError(err, response, callback);
+                } else {
+                    console.log(data.Item);
+                    let payload = data.Item;
+                    if (data.Item === undefined) {
+                        helpers.handleError({error: "Not Found"}, response, callback, 404)
+                    } else {
+                        let postId = payload.id;
+                        let ids = [];
+                        ids.push(postId);
+                        database.deleteMarkdown(ids, err => {
+                            if (err) {
+                                console.log("ERROR DELETING MARKDOWN FROM TABLE");
+                                helpers.handleError(err, response, callback);
+                            } else {
+                                response.body = JSON.stringify(payload);
+                                callback(null, response);
+                            }
+                        });
+                    }
+                }
+            });
+        } catch (e) {
+            helpers.handleError(e, response, callback);
+        }
+    });
+};
+
+module.exports.submitHandler = (event, context, callback) => {
+    try {
+        let response = helpers.getDefaultResponse();
+        let markdown = JSON.parse(event.body).markdown;
+        let threshold = 4096;
+        let payloadSize = Buffer.byteLength(markdown, 'utf-8');
+        if (payloadSize > threshold) {
+            // This is larger than most payloads will ever be because the UI has a 4096 character limit in the text area.
+            helpers.handleError({error: `Payload too large. It must be <= ${threshold} bytes AFTER gzip compression.`}, response, callback, 413);
+        }
+        authenticatedHandler(event, context, callback, () => {
+            let id = helpers.generatePostId();
+            database.putMarkdown(id, markdown, err => {
+                if (err) {
+                    helpers.handleError(err, response, callback);
+                } else {
+                    response.body = JSON.stringify({postId: id});
+                    callback(null, response);
+                }
+            });
+        });
+    } catch (e) {
         helpers.handleError(e, response, callback);
     }
 };
