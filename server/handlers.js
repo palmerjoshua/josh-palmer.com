@@ -17,12 +17,12 @@ const authenticatedHandler = (event, context, callback, successFn, ...args) => {
                 if (!resp.data.success) {
                     console.log(`RECEIVED INVALID CAPTCHA FROM: ${ip}`);
                     console.log(resp);
-                    helpers.handleError("Unauthenticated", response, callback, 401);
+                    helpers.handleError(null, response, callback, 401, "Unauthenticated");
 
                 } else if (!helpers.testHost(resp.data.hostname)){
                     console.log(`RECEIVED INVALID CAPTCHA FROM: ${ip}`);
                     console.log("HOSTNAME: ", resp.data.hostname);
-                    helpers.handleError("Unauthenticated", response, callback, 401)
+                    helpers.handleError(null, response, callback, 401, "Unauthenticated")
 
                 } else {
                     successFn(...args);
@@ -30,19 +30,15 @@ const authenticatedHandler = (event, context, callback, successFn, ...args) => {
 
             }).catch(err => {
                 console.log("EXCEPTION WHEN VERIFYING CAPTCHA");
-                console.log(err);
-                helpers.handleError(err, response, callback);
+                helpers.handleError(err, response, callback, 500, "CAPTCHA VERIFY FAILED");
             });
 
         }).catch(err => {
             console.log("EXCEPTION WHEN GETTING SECRETS");
-            console.log(err);
-            helpers.handleError(err, response, callback);
+            helpers.handleError(err, response, callback, 500, "CAPTCHA VERIFY FAILED");
         });
 
     } catch (e) {
-        console.log("UNKNOWN EXCEPTION");
-        console.log(e);
         helpers.handleError(e, response, callback);
     }
 };
@@ -54,7 +50,7 @@ module.exports.fetchHandler = (event, context, callback) => {
             let body = JSON.parse(event.body);
             let postId = body.postId;
             if(!helpers.testPostIdPattern(postId)) {
-                helpers.handleError({error: "Bad request"}, response, callback, 400);
+                helpers.handleError({error: "Bad request"}, response, callback, 400, {error: "Bad request"});
             }
             database.getMarkdown(postId, (err, data) => {
                 if (err) {
@@ -64,7 +60,7 @@ module.exports.fetchHandler = (event, context, callback) => {
                     console.log(data.Item);
                     let payload = data.Item;
                     if (data.Item === undefined) {
-                        helpers.handleError({error: "Not Found"}, response, callback, 404)
+                        helpers.handleError({error: "Not Found"}, response, callback, 404, {error: "Bad request"})
                     } else {
                         let postId = payload.id;
                         let ids = [];
@@ -112,4 +108,3 @@ module.exports.submitHandler = (event, context, callback) => {
         helpers.handleError(e, response, callback);
     }
 };
-
