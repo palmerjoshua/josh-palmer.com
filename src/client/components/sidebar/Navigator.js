@@ -24,7 +24,7 @@ export default class Navigator extends Component {
         return (
             <nav className="Navigator">
                 <ul style={{listStyleType: 'none', padding: 0}}>
-                    {routeConfig.filter((route) => !route.hide).map((route, index) => (
+                    {routeConfig.routes.filter((route) => !route.hide).map((route, index) => (
                         <NavItem key={index}
                                  path={route.path}
                                  text={route.text}
