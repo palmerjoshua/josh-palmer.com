@@ -1,6 +1,8 @@
 let crypto = require('crypto');
 const axios = require('axios');
 
+const PROD_MODE = process.env.DEPLOYMENT.toString().toLowerCase() === 'prod';
+
 const DEFAULT_RESPONSE = {
     isBase64Encoded: false,
     statusCode: 200,
@@ -19,9 +21,22 @@ const generatePostId = () => {
     return crypto.randomBytes(20).toString('hex');
 };
 
-const handleError = (error, response, callback, status = 500) => {
-    console.log(error);
-    response.body = JSON.stringify(error);
+const handleError = (error, response, callback, status = 500, msg = null) => {
+    if (msg) {
+        console.log(msg);
+    }
+    if (error) {
+        console.log(error);
+    }
+
+    if (!PROD_MODE) {
+        response.body = JSON.stringify(error);
+    } else if (msg) {
+        response.body = msg;
+    } else {
+        response.body = "UNKNOWN ERROR OCCURRED";
+    }
+
     response.statusCode = status;
     callback(null, response);
 };
