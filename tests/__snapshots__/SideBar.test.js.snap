@@ -1,0 +1,95 @@
+exports[`test renders correctly 1`] = `
+<div>
+  <aside
+    className="sideBar">
+    <nav
+      className="Navigator">
+      <ul
+        style={
+          Object {
+            "listStyleType": "none",
+            "padding": 0,
+          }
+        }>
+        <li
+          className="navItem">
+          <a
+            href="/"
+            style={
+              Object {
+                "display": "inline-block",
+                "height": "100%",
+                "padding": 10,
+                "width": "90%",
+              }
+            }>
+            Home
+          </a>
+        </li>
+        <li
+          className="navItem">
+          <a
+            href="/resume"
+            style={
+              Object {
+                "display": "inline-block",
+                "height": "100%",
+                "padding": 10,
+                "width": "90%",
+              }
+            }>
+            Résumé
+          </a>
+        </li>
+        <li
+          className="navItem">
+          <a
+            href="http://github.com/palmerjoshua"
+            style={
+              Object {
+                "display": "inline-block",
+                "height": "100%",
+                "padding": 10,
+                "width": "90%",
+              }
+            }
+            target="_blank">
+            GitHub
+          </a>
+        </li>
+        <li
+          className="navItem">
+          <a
+            href="https://www.linkedin.com/in/joshua--palmer"
+            style={
+              Object {
+                "display": "inline-block",
+                "height": "100%",
+                "padding": 10,
+                "width": "90%",
+              }
+            }
+            target="_blank">
+            LinkedIn
+          </a>
+        </li>
+        <li
+          className="navItem">
+          <a
+            href="/secret"
+            style={
+              Object {
+                "display": "inline-block",
+                "height": "100%",
+                "padding": 10,
+                "width": "90%",
+              }
+            }>
+            Secret Messenger
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </aside>
+</div>
+`;
