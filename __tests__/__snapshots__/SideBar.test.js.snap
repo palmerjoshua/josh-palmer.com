@@ -1,0 +1,64 @@
+exports[`test renders correctly 1`] = `
+<div>
+  <aside
+    className="sideBar">
+    <nav
+      className="Navigator">
+      <ul
+        style={
+          Object {
+            "listStyleType": "none",
+            "padding": 0,
+          }
+        }>
+        <li
+          className="navItem">
+          <a
+            href="/"
+            style={
+              Object {
+                "display": "inline-block",
+                "height": "100%",
+                "padding": 10,
+                "width": "90%",
+              }
+            }>
+            Home
+          </a>
+        </li>
+        <li
+          className="navItem">
+          <a
+            href="/bar"
+            style={
+              Object {
+                "display": "inline-block",
+                "height": "100%",
+                "padding": 10,
+                "width": "90%",
+              }
+            }>
+            Bar
+          </a>
+        </li>
+        <li
+          className="navItem">
+          <a
+            href="https://example.com"
+            style={
+              Object {
+                "display": "inline-block",
+                "height": "100%",
+                "padding": 10,
+                "width": "90%",
+              }
+            }
+            target="_blank">
+            External
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </aside>
+</div>
+`;

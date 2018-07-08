@@ -1,6 +1,7 @@
 import React from 'react';
 import {Route} from 'react-router-dom';
-import routeConfig from './config';
+const routeConfig = require('./config').routes;
+
 export const routeExists = (path) => {
     return routeConfig.some(route => route.path === path);
 };

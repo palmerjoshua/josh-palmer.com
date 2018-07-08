@@ -1,0 +1,11 @@
+{
+    "verbose": true,
+    "automock": true,
+    "collectCoverageFrom": [
+        "!**/node_modules/**",
+        "!**/data/**",
+        "!**/build/**",
+        "!**/assets/**",
+        "!**public**"
+    ]
+}

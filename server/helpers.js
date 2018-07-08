@@ -1,7 +1,7 @@
 let crypto = require('crypto');
 const axios = require('axios');
 
-const PROD_MODE = process.env.DEPLOYMENT.toString().toLowerCase() === 'prod';
+const inProductionMode = () =>{return (process.env.DEPLOYMENT || 'local').toLowerCase() === 'prod';};
 
 const DEFAULT_RESPONSE = {
     isBase64Encoded: false,
@@ -29,7 +29,7 @@ const handleError = (error, response, callback, status = 500, msg = null) => {
         console.log(error);
     }
 
-    if (!PROD_MODE) {
+    if (!inProductionMode()) {
         response.body = JSON.stringify(error);
     } else if (msg) {
         response.body = msg;
@@ -69,6 +69,7 @@ const testPostIdPattern = (postId) => {
 };
 
 module.exports = {
+    inProductionMode,
     generatePostId,
     handleError,
     verifyCaptcha,
